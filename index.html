@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Interview Prep — 2-Week Intensive Plan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0078d4;
+            --primary-dark: #005a9e;
+            --accent: #00b4d8;
+            --bg: #0a0f1c;
+            --bg-alt: #111827;
+            --surface: #1e293b;
+            --surface-hover: #263548;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --purple: #a78bfa;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+        /* Navigation */
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(10,15,28,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo { font-size: 1.3rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .nav-menu { display: flex; list-style: none; gap: 1.5rem; flex-wrap: wrap; }
+        .nav-link { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.85rem; transition: color 0.3s; }
+        .nav-link:hover { color: var(--primary); }
+        .progress-bar { position: fixed; top: 60px; left: 0; height: 3px; background: var(--gradient); z-index: 999; transition: width 0.3s; }
+
+        /* Hero */
+        .hero { padding: 7rem 2rem 3rem; text-align: center; max-width: 900px; margin: 0 auto; }
+        .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.75rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { color: var(--text-muted); font-size: 1rem; max-width: 650px; margin: 0 auto 1.5rem; }
+        .hero-stats { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-value { display: block; font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .progress-summary { margin-top: 1.5rem; padding: 1rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); }
+        .progress-summary span { color: var(--green); font-weight: 700; }
+
+        /* Sections */
+        .section { padding: 3.5rem 2rem; }
+        .section-alt { background: var(--bg-alt); }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 2rem; text-align: center; }
+        .section-title::after { content: ''; display: block; width: 50px; height: 3px; background: var(--gradient); margin: 0.5rem auto 0; border-radius: 2px; }
+
+        /* Accordion Days */
+        .day-accordion { margin-bottom: 1rem; }
+        .day-header { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.3s; }
+        .day-header:hover { background: var(--surface-hover); }
+        .day-header.open { border-radius: var(--radius) var(--radius) 0 0; border-bottom-color: transparent; }
+        .day-number { background: var(--gradient); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+        .day-number.completed { background: var(--green); }
+        .day-info { flex: 1; }
+        .day-info h3 { font-size: 0.95rem; margin-bottom: 0.15rem; }
+        .day-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .day-toggle { font-size: 1.2rem; color: var(--text-muted); transition: transform 0.3s; }
+        .day-header.open .day-toggle { transform: rotate(180deg); }
+        .day-body { display: none; padding: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); }
+        .day-body.open { display: block; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .day-section { margin-bottom: 1.5rem; }
+        .day-section h4 { color: var(--primary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .day-section p, .day-section li { color: var(--text-muted); font-size: 0.88rem; line-height: 1.8; }
+        .day-section ul { list-style: none; padding-left: 0; }
+        .day-section li { padding: 0.3rem 0; padding-left: 1.5rem; position: relative; }
+        .day-section li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
+        .resource-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin: 0.25rem 0.5rem 0.25rem 0; padding: 0.25rem 0.6rem; background: rgba(0,180,216,0.1); border-radius: 6px; transition: background 0.2s; }
+        .resource-link:hover { background: rgba(0,180,216,0.2); }
+        .resource-link.youtube { color: #ff4444; background: rgba(255,68,68,0.1); }
+        .resource-link.youtube:hover { background: rgba(255,68,68,0.2); }
+
+        /* Tabs */
+        .tabs-container { margin-top: 1.5rem; }
+        .tab-buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; padding: 0.4rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); }
+        .tab-btn { padding: 0.6rem 1.2rem; border: none; border-radius: 8px; background: transparent; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
+        .tab-btn:hover { color: var(--text); background: var(--surface-hover); }
+        .tab-btn.active { background: var(--gradient); color: white; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Cards */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+        .card h3 { color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem; }
+
+        /* Code Blocks - IMPROVED */
+        .code-card { position: relative; background: #0d1117; border: 1px solid var(--border); border-radius: 10px; margin: 1rem 0; overflow: hidden; }
+        .code-card-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+        .code-card-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .copy-btn { padding: 0.3rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-muted); font-size: 0.7rem; cursor: pointer; opacity: 0; transition: all 0.2s; }
+        .code-card:hover .copy-btn { opacity: 1; }
+        .copy-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .copy-btn.copied { background: var(--green); color: white; border-color: var(--green); }
+        .code-card pre { padding: 1.2rem 1.5rem; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.82rem; line-height: 1.9; color: var(--text); white-space: pre; tab-size: 4; }
+        .code-card pre .comment { color: #6a9955; font-style: italic; }
+        .code-card pre .keyword { color: #c586c0; }
+        .code-card pre .string { color: #ce9178; }
+        .code-card pre .function { color: #dcdcaa; }
+        .code-card pre .number { color: #b5cea8; }
+        .code-card pre .type { color: #4ec9b0; }
+        .code-card pre .variable { color: #9cdcfe; }
+        .code-card pre .operator { color: #d4d4d4; }
+
+        /* Checklist - FIXED */
+        .checklist { list-style: none; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(51,65,85,0.5); font-size: 0.9rem; color: var(--text-muted); }
+        .checklist li:last-child { border-bottom: none; }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; min-width: 18px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; margin-top: 2px; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--green); border-color: var(--green); }
+        .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: -1px; left: 3px; color: white; font-size: 12px; font-weight: bold; }
+        .checklist li.done { text-decoration: line-through; opacity: 0.6; }
+
+        /* Tip Box */
+        .tip-box { background: rgba(0,120,212,0.08); border: 1px solid rgba(0,120,212,0.25); border-radius: var(--radius); padding: 1.25rem; margin: 1.5rem 0; }
+        .tip-box h4 { color: var(--primary); margin-bottom: 0.4rem; font-size: 0.9rem; }
+        .tip-box p { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* Schedule Table */
+        .schedule-table { width: 100%; border-collapse: collapse; }
+        .schedule-table th, .schedule-table td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .schedule-table th { color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+        .schedule-table td { color: var(--text-muted); }
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+        .badge-easy { background: rgba(34,197,94,0.2); color: var(--green); }
+        .badge-medium { background: rgba(234,179,8,0.2); color: var(--yellow); }
+        .badge-hard { background: rgba(239,68,68,0.2); color: var(--red); }
+
+        /* Footer */
+        .footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.6rem; }
+            .nav-menu { display: none; }
+            .card-grid { grid-template-columns: 1fr; }
+            .tab-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">📚 Interview Prep</a>
+            <ul class="nav-menu">
+                <li><a href="#schedule" class="nav-link">14-Day Plan</a></li>
+                <li><a href="#coding" class="nav-link">Coding</a></li>
+                <li><a href="#infrastructure" class="nav-link">Infrastructure</a></li>
+                <li><a href="#system-design" class="nav-link">System Design</a></li>
+                <li><a href="#behavioral" class="nav-link">Behavioral</a></li>
+                <li><a href="#tracker" class="nav-link">Tracker</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Microsoft Interview Prep</h1>
+        <p>2-Week Intensive Study Plan — Python, C#, Terraform, YAML, Kubernetes, System Design & Behavioral</p>
+        <div class="hero-stats">
+            <div class="stat"><span class="stat-value">14</span><span class="stat-label">Days</span></div>
+            <div class="stat"><span class="stat-value">50+</span><span class="stat-label">Problems</span></div>
+            <div class="stat"><span class="stat-value">5</span><span class="stat-label">Domains</span></div>
+            <div class="stat"><span class="stat-value">2-3hr</span><span class="stat-label">Daily</span></div>
+        </div>
+        <div class="progress-summary">
+            📊 Progress: <span id="progressText">0 / 0 items completed (0%)</span>
+        </div>
+    </section>
+
+    <!-- 14-Day Schedule with Accordion -->
+    <section class="section section-alt" id="schedule">
+        <div class="container">
+            <h2 class="section-title">2-Week Study Schedule</h2>
+            <div class="tip-box">
+                <h4>💡 Daily Routine</h4>
+                <p><strong>Morning (1 hr):</strong> 2-3 LeetCode problems (Python & C#) | <strong>Afternoon (1 hr):</strong> Infrastructure (Terraform/YAML/K8s) | <strong>Evening (30-60 min):</strong> System design or behavioral</p>
+            </div>
+
+            <div id="schedule-days"></div>
+        </div>
+    </section>
+
+    <!-- Coding Section -->
+    <section class="section" id="coding">
+        <div class="container">
+            <h2 class="section-title">Coding Problems & Solutions</h2>
+            <div class="tabs-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="python">Python</button>
+                    <button class="tab-btn" data-tab="csharp">C#</button>
+                </div>
+
+                <div class="tab-content active" id="python">
+                    <div class="card-grid" id="python-cards"></div>
+                </div>
+                <div class="tab-content" id="csharp">
+                    <div class="card-grid" id="csharp-cards"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infrastructure Section -->
+    <section class="section section-alt" id="infrastructure">
+        <div class="container">
+            <h2 class="section-title">Infrastructure & DevOps</h2>
+            <div class="tabs-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="terraform">Terraform</button>
+                    <button class="tab-btn" data-tab="yaml">YAML Pipelines</button>
+                    <button class="tab-btn" data-tab="kubernetes">Kubernetes</button>
+                </div>
+
+                <div class="tab-content active" id="terraform">
+                    <div class="card-grid" id="terraform-cards"></div>
+                </div>
+                <div class="tab-content" id="yaml">
+                    <div class="card-grid" id="yaml-cards"></div>
+                </div>
+                <div class="tab-content" id="kubernetes">
+                    <div class="card-grid" id="kubernetes-cards"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Design Section -->
+    <section class="section" id="system-design">
+        <div class="container">
+            <h2 class="section-title">System Design (SRE Focus)</h2>
+            <div class="card-grid" id="sysdesign-cards"></div>
+        </div>
+    </section>
+
+    <!-- Behavioral Section -->
+    <section class="section section-alt" id="behavioral">
+        <div class="container">
+            <h2 class="section-title">Behavioral (STAR Method)</h2>
+            <div class="card-grid" id="behavioral-cards"></div>
+            <div class="tip-box">
+                <h4>💡 STAR Format</h4>
+                <p><strong>S</strong>ituation (2 sentences) → <strong>T</strong>ask (your responsibility) → <strong>A</strong>ction (what YOU did) → <strong>R</strong>esult (quantifiable). Keep under 2 minutes. Have 8-10 stories covering different themes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Tracker -->
+    <section class="section" id="tracker">
+        <div class="container">
+            <h2 class="section-title">LeetCode Problem Tracker</h2>
+            <div class="card" style="overflow-x:auto;">
+                <table class="schedule-table" id="problem-tracker"></table>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>📚 Microsoft Interview Prep — Rajesh Dammala | 2-Week Intensive | June 2026</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;">Progress is saved locally in your browser. Clear browser data to reset.</p>
+    </footer>
+
+<script>
+// ============================================================
+// DATA: 14-Day Schedule
+// ============================================================
+const scheduleData = [
+    {
+        day: 1, title: "Arrays & Strings", time: "2.5 hr",
+        topics: [
+            { name: "Two Sum", desc: "Use a hash map to find complement in O(n). Store each number's index as you iterate." },
+            { name: "Valid Anagram", desc: "Compare character frequency counts. Use a 26-element array or Counter/Dictionary." },
+            { name: "Sliding Window Maximum", desc: "Use a deque to maintain indices of max candidates. Remove elements outside window." },
+            { name: "Best Time to Buy/Sell Stock", desc: "Track minimum price seen so far, calculate max profit at each step." }
+        ],
+        resources: [
+            { label: "NeetCode - Arrays", url: "https://neetcode.io/roadmap", type: "link" },
+            { label: "LeetCode Arrays Guide", url: "https://leetcode.com/explore/learn/card/array-and-string/", type: "link" },
+            { label: "Two Sum Explained", url: "https://www.youtube.com/watch?v=KLlXCFG5TnA", type: "youtube" },
+            { label: "Sliding Window Pattern", url: "https://www.youtube.com/watch?v=MK-NZ4hN7rs", type: "youtube" }
+        ],
+        infra: "YAML Basics: Review YAML syntax — indentation, lists, dictionaries, anchors & aliases."
+    },
+    {
+        day: 2, title: "Hash Maps & Sets", time: "2.5 hr",
+        topics: [
+            { name: "Group Anagrams", desc: "Sort each word as key, or use character frequency tuple as key. Group by matching keys." },
+            { name: "LRU Cache", desc: "Combine OrderedDict (Python) or LinkedList+Dictionary (C#) for O(1) get/put." },
+            { name: "Top K Frequent Elements", desc: "Use Counter + heap for O(n log k), or bucket sort for O(n)." },
+            { name: "Contains Duplicate", desc: "Use a Set — if element already exists, return true. O(n) time, O(n) space." }
+        ],
+        resources: [
+            { label: "Hash Tables Explained", url: "https://www.youtube.com/watch?v=jalSiaIi8j4", type: "youtube" },
+            { label: "LRU Cache - NeetCode", url: "https://www.youtube.com/watch?v=7ABFKPK2hD4", type: "youtube" },
+            { label: "Python Collections Docs", url: "https://docs.python.org/3/library/collections.html", type: "link" }
+        ],
+        infra: "Terraform Intro: Install Terraform, understand providers, resources, and 'terraform init/plan/apply' workflow."
+    },
+    {
+        day: 3, title: "Linked Lists & Stacks", time: "2.5 hr",
+        topics: [
+            { name: "Reverse Linked List", desc: "Iterative: maintain prev, curr, next pointers. Move one node at a time. O(n)." },
+            { name: "Merge K Sorted Lists", desc: "Use a min-heap of size K. Pop smallest, push its next. O(n log k)." },
+            { name: "Valid Parentheses", desc: "Push open brackets to stack. On close bracket, check stack top matches. O(n)." },
+            { name: "Detect Cycle (Floyd's)", desc: "Slow pointer moves 1 step, fast moves 2. If they meet, cycle exists." }
+        ],
+        resources: [
+            { label: "Linked List Basics", url: "https://www.youtube.com/watch?v=Hj_rA0dhr2I", type: "youtube" },
+            { label: "Stack Problems Playlist", url: "https://www.youtube.com/watch?v=WTzjTskDFMg", type: "youtube" },
+            { label: "Visualgo - Linked List", url: "https://visualgo.net/en/list", type: "link" }
+        ],
+        infra: "Kubernetes Pods: Understand Pod spec, containers, init containers. Run 'kubectl run' and 'kubectl get pods'."
+    },
+    {
+        day: 4, title: "Trees & Binary Search Trees", time: "3 hr",
+        topics: [
+            { name: "Level Order Traversal (BFS)", desc: "Use a queue. Process level by level, tracking queue size at each iteration." },
+            { name: "Validate BST", desc: "Recursively check each node is within valid (min, max) range. Pass bounds down." },
+            { name: "Serialize/Deserialize Tree", desc: "BFS or preorder DFS with null markers. Use delimiter to split on deserialize." },
+            { name: "Lowest Common Ancestor", desc: "If root equals p or q, return root. Recurse left/right. If both return non-null, root is LCA." }
+        ],
+        resources: [
+            { label: "Tree Traversals Visual", url: "https://www.youtube.com/watch?v=fAAZixBzIAI", type: "youtube" },
+            { label: "BST Explained - Abdul Bari", url: "https://www.youtube.com/watch?v=pYT9F8_LFTM", type: "youtube" },
+            { label: "Visualgo - BST", url: "https://visualgo.net/en/bst", type: "link" }
+        ],
+        infra: "YAML Manifests: Write your first K8s Deployment YAML. Understand apiVersion, kind, metadata, spec structure."
+    },
+    {
+        day: 5, title: "Graphs (BFS & DFS)", time: "3 hr",
+        topics: [
+            { name: "Number of Islands", desc: "DFS/BFS from each '1'. Mark visited cells as '0'. Count connected components." },
+            { name: "Word Ladder", desc: "BFS where each level changes one character. Use word set for O(1) lookup." },
+            { name: "Course Schedule", desc: "Topological sort using BFS (Kahn's) or DFS with cycle detection via indegree." },
+            { name: "Clone Graph", desc: "BFS/DFS with a hash map of old→new node mappings to handle cycles." }
+        ],
+        resources: [
+            { label: "Graph BFS/DFS - William Fiset", url: "https://www.youtube.com/watch?v=09_LlHjoEiY", type: "youtube" },
+            { label: "Topological Sort", url: "https://www.youtube.com/watch?v=eL-KzMXSXXI", type: "youtube" },
+            { label: "Graph Algorithms Playlist", url: "https://www.youtube.com/playlist?list=PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km93i", type: "youtube" }
+        ],
+        infra: "K8s Deployments: Rolling updates, replicas, selectors, strategy types. Practice 'kubectl apply -f deployment.yaml'."
+    },
+    {
+        day: 6, title: "Dynamic Programming", time: "3 hr",
+        topics: [
+            { name: "Climbing Stairs", desc: "dp[i] = dp[i-1] + dp[i-2]. Classic Fibonacci pattern. Can optimize to O(1) space." },
+            { name: "Coin Change", desc: "dp[amount] = min coins needed. For each coin, dp[x] = min(dp[x], dp[x-coin]+1)." },
+            { name: "Longest Increasing Subsequence", desc: "O(n²) DP or O(n log n) with binary search on tails array." },
+            { name: "House Robber", desc: "dp[i] = max(dp[i-1], dp[i-2] + nums[i]). Can't rob adjacent houses." }
+        ],
+        resources: [
+            { label: "DP Patterns - NeetCode", url: "https://www.youtube.com/watch?v=mBNrRy2_hVs", type: "youtube" },
+            { label: "Dynamic Programming Course", url: "https://www.youtube.com/watch?v=oBt53YbR9Kk", type: "youtube" },
+            { label: "DP Patterns Guide", url: "https://leetcode.com/discuss/general-discussion/458695/", type: "link" }
+        ],
+        infra: "Terraform State: Understand local vs remote state, state locking, 'terraform state' commands, backends (azurerm)."
+    },
+    {
+        day: 7, title: "Review + System Design", time: "3 hr",
+        topics: [
+            { name: "Review Weak Areas", desc: "Revisit any Day 1-6 problems you struggled with. Re-solve without looking at solutions." },
+            { name: "Design: URL Shortener", desc: "Hash function, base62 encoding, database choice, caching layer, redirect flow." },
+            { name: "Pattern Recognition", desc: "Practice identifying which pattern (sliding window, two pointer, BFS, DP) to apply." }
+        ],
+        resources: [
+            { label: "System Design Primer", url: "https://github.com/donnemartin/system-design-primer", type: "link" },
+            { label: "URL Shortener Design", url: "https://www.youtube.com/watch?v=fMZMm_0ZhK4", type: "youtube" },
+            { label: "K8s Services & Ingress", url: "https://www.youtube.com/watch?v=80Ew_fsV4rM", type: "youtube" }
+        ],
+        infra: "K8s Services & Ingress: ClusterIP, NodePort, LoadBalancer types. Ingress rules and controllers."
+    },
+    {
+        day: 8, title: "Binary Search & Sorting", time: "2.5 hr",
+        topics: [
+            { name: "Search in Rotated Array", desc: "Modified binary search: determine which half is sorted, then decide which half to search." },
+            { name: "Merge Intervals", desc: "Sort by start time. Merge overlapping intervals by comparing end times." },
+            { name: "Kth Largest Element", desc: "Use max-heap (pop k times) or QuickSelect for average O(n)." },
+            { name: "Find Minimum in Rotated Array", desc: "Binary search: if mid > right, minimum is in right half. O(log n)." }
+        ],
+        resources: [
+            { label: "Binary Search Template", url: "https://leetcode.com/discuss/general-discussion/786126/", type: "link" },
+            { label: "Binary Search - NeetCode", url: "https://www.youtube.com/watch?v=s4DPM8ct1pI", type: "youtube" },
+            { label: "QuickSelect Explained", url: "https://www.youtube.com/watch?v=XEmy13g1Qxc", type: "youtube" }
+        ],
+        infra: "Helm Charts: Chart structure, values.yaml, templates, install/upgrade/rollback commands."
+    },
+    {
+        day: 9, title: "Heaps & Priority Queues", time: "2.5 hr",
+        topics: [
+            { name: "Find Median from Data Stream", desc: "Two heaps: max-heap for lower half, min-heap for upper half. Balance after each insert." },
+            { name: "Task Scheduler", desc: "Greedy: schedule most frequent tasks first. Calculate idle slots needed." },
+            { name: "Merge K Sorted Lists", desc: "Min-heap stores one node from each list. Pop min, push its next." },
+            { name: "Top K Frequent Elements", desc: "Counter + min-heap of size k. Or bucket sort by frequency." }
+        ],
+        resources: [
+            { label: "Heaps & Priority Queues", url: "https://www.youtube.com/watch?v=t0Cq6tVNRBA", type: "youtube" },
+            { label: "Python heapq Docs", url: "https://docs.python.org/3/library/heapq.html", type: "link" },
+            { label: "Median Finder Explained", url: "https://www.youtube.com/watch?v=itmhHWaHupI", type: "youtube" }
+        ],
+        infra: "Terraform Modules: Create reusable modules, input/output variables, module sources, versioning."
+    },
+    {
+        day: 10, title: "Recursion & Backtracking", time: "3 hr",
+        topics: [
+            { name: "Permutations", desc: "Swap elements at each position. Recurse on remaining. Backtrack by unswapping." },
+            { name: "N-Queens", desc: "Place queen row by row. Check column, diagonal conflicts. Backtrack on conflict." },
+            { name: "Word Search", desc: "DFS from each cell matching first char. Mark visited, backtrack on dead end." },
+            { name: "Subsets", desc: "Include/exclude each element. Build decision tree. Collect all leaf paths." }
+        ],
+        resources: [
+            { label: "Backtracking Template", url: "https://leetcode.com/problems/permutations/solutions/18239/", type: "link" },
+            { label: "Backtracking - NeetCode", url: "https://www.youtube.com/watch?v=REOH22Xwdkk", type: "youtube" },
+            { label: "N-Queens Visualized", url: "https://www.youtube.com/watch?v=Ph95IHmRp5M", type: "youtube" }
+        ],
+        infra: "K8s ConfigMaps & Secrets: Create, mount as volumes or env vars, manage sensitive data, encryption at rest."
+    },
+    {
+        day: 11, title: "System Design Deep Dive", time: "3 hr",
+        topics: [
+            { name: "Design: Monitoring System", desc: "Metrics collection (push/pull), log aggregation, alert routing, dashboards, SLI/SLO." },
+            { name: "Design: Incident Pipeline", desc: "Detection → Triage → Mitigation → RCA → Follow-up. Severity levels, escalation." },
+            { name: "Design: CI/CD Pipeline", desc: "Source → Build → Test → Stage → Deploy. Strategies: blue-green, canary, rolling." }
+        ],
+        resources: [
+            { label: "Monitoring Design - Gaurav Sen", url: "https://www.youtube.com/watch?v=kIcq1_pBQSY", type: "youtube" },
+            { label: "CI/CD Pipeline Design", url: "https://www.youtube.com/watch?v=scEDHsr3APg", type: "youtube" },
+            { label: "Google SRE Book (Free)", url: "https://sre.google/sre-book/table-of-contents/", type: "link" },
+            { label: "Terraform Azure Provider", url: "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs", type: "link" }
+        ],
+        infra: "Terraform Azure: Deploy resource groups, VNets, AKS clusters. Practice with 'azurerm' provider."
+    },
+    {
+        day: 12, title: "Mixed Coding + K8s Troubleshooting", time: "3 hr",
+        topics: [
+            { name: "Random LeetCode (Microsoft)", desc: "Pick 3-4 random Microsoft-tagged problems. Simulate timed conditions (25 min each)." },
+            { name: "K8s Troubleshooting", desc: "Practice: CrashLoopBackOff, ImagePullBackOff, OOMKilled, Pending pods. Use kubectl describe/logs." },
+            { name: "YAML Pipeline Debugging", desc: "Common errors: indentation, variable syntax, stage dependencies, condition expressions." }
+        ],
+        resources: [
+            { label: "LeetCode Microsoft Tag", url: "https://leetcode.com/company/microsoft/", type: "link" },
+            { label: "K8s Troubleshooting Guide", url: "https://kubernetes.io/docs/tasks/debug/", type: "link" },
+            { label: "K8s Debugging Pods", url: "https://www.youtube.com/watch?v=K4FUj2S2Sms", type: "youtube" }
+        ],
+        infra: "Full K8s workflow: Write Deployment → Service → Ingress → HPA. Debug with kubectl commands."
+    },
+    {
+        day: 13, title: "Mock Interview Day", time: "3 hr",
+        topics: [
+            { name: "Mock Coding (45 min)", desc: "1 medium + 1 easy problem. Explain approach, code, test with edge cases. Time yourself." },
+            { name: "Mock System Design (45 min)", desc: "Pick one: monitoring system, incident pipeline, or autoscaling platform. Full whiteboard." },
+            { name: "Mock Behavioral (30 min)", desc: "Practice 3-4 STAR stories out loud. Time each to under 2 minutes." },
+            { name: "Infrastructure Q&A (30 min)", desc: "Answer Terraform, K8s, YAML questions out loud as if explaining to interviewer." }
+        ],
+        resources: [
+            { label: "Pramp - Free Mock Interviews", url: "https://www.pramp.com/", type: "link" },
+            { label: "Interviewing.io (Free)", url: "https://interviewing.io/", type: "link" },
+            { label: "Mock Interview Tips", url: "https://www.youtube.com/watch?v=1qw5ITr3k9E", type: "youtube" }
+        ],
+        infra: "Full simulation: Explain your infrastructure choices as if in an interview. Practice whiteboarding."
+    },
+    {
+        day: 14, title: "Final Review & Confidence", time: "2 hr",
+        topics: [
+            { name: "Pattern Cheat Sheet", desc: "Review: Sliding Window, Two Pointers, BFS/DFS, DP, Binary Search, Backtracking patterns." },
+            { name: "Weak Spot Polish", desc: "Re-solve 2-3 problems you struggled with most. Focus on explaining your thought process." },
+            { name: "STAR Stories Final Polish", desc: "Rehearse your top 5 stories. Ensure they cover: leadership, failure, conflict, innovation, scale." },
+            { name: "Logistics & Mindset", desc: "Prepare environment, test audio/video, review company info. Rest well tonight!" }
+        ],
+        resources: [
+            { label: "14 Patterns to Ace Coding", url: "https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6ed", type: "link" },
+            { label: "Interview Day Tips", url: "https://www.youtube.com/watch?v=0Z9RW_hhUT4", type: "youtube" },
+            { label: "Microsoft Interview Tips", url: "https://careers.microsoft.com/v2/global/en/interviewtips", type: "link" }
+        ],
+        infra: "Review all infra notes. Be ready to explain Terraform state, K8s probes, YAML pipeline stages clearly."
+    }
+];
+
+// ============================================================
+// DATA: Coding Problems
+// ============================================================
+const pythonProblems = [
+    { title: "Two Sum — Hash Map O(n)", code: `# Two Sum
+# Given an array and target, find two indices that sum to target.
+# Approach: Store seen numbers in dict. Check if complement exists.
+
+def two_sum(nums, target):
+    seen = {}  # value -> index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+# Example: two_sum([2, 7, 11, 15], 9) → [0, 1]
+# Time: O(n) | Space: O(n)` },
+    { title: "Sliding Window Maximum — Deque O(n)", code: `# Sliding Window Maximum
+# Find max in each window of size k as it slides across array.
+# Approach: Deque stores indices of useful elements (decreasing order).
+
+from collections import deque
+
+def max_sliding_window(nums, k):
+    dq = deque()  # stores indices
+    result = []
+    
+    for i, num in enumerate(nums):
+        # Remove elements smaller than current (they'll never be max)
+        while dq and nums[dq[-1]] <= num:
+            dq.pop()
+        
+        dq.append(i)
+        
+        # Remove elements outside window
+        if dq[0] <= i - k:
+            dq.popleft()
+        
+        # Window is fully formed starting at index k-1
+        if i >= k - 1:
+            result.append(nums[dq[0]])
+    
+    return result
+
+# Example: max_sliding_window([1,3,-1,-3,5,3,6,7], 3) → [3,3,5,5,6,7]
+# Time: O(n) | Space: O(k)` },
+    { title: "Reverse Linked List — Iterative O(n)", code: `# Reverse a singly linked list in-place.
+# Approach: Maintain three pointers: prev, curr, next.
+# At each step, reverse curr's pointer, then advance all three.
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def reverse_list(head):
+    prev = None
+    curr = head
+    
+    while curr:
+        next_node = curr.next   # Save next
+        curr.next = prev        # Reverse pointer
+        prev = curr             # Advance prev
+        curr = next_node        # Advance curr
+    
+    return prev  # prev is now the new head
+
+# Example: 1→2→3→4→5 becomes 5→4→3→2→1
+# Time: O(n) | Space: O(1)` },
+    { title: "LRU Cache — OrderedDict O(1)", code: `# Design a Least Recently Used cache with O(1) get and put.
+# Approach: OrderedDict maintains insertion order.
+# On access, move to end. On overflow, remove from front (oldest).
+
+from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cache = OrderedDict()
+        self.cap = capacity
+    
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        # Move to end (most recently used)
+        self.cache.move_to_end(key)
+        return self.cache[key]
+    
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        # Evict oldest if over capacity
+        if len(self.cache) > self.cap:
+            self.cache.popitem(last=False)
+
+# Usage:
+# cache = LRUCache(2)
+# cache.put(1, 1); cache.put(2, 2)
+# cache.get(1)    → 1 (moves key 1 to end)
+# cache.put(3, 3) → evicts key 2
+# Time: O(1) for both get and put` },
+    { title: "Level Order Traversal — BFS O(n)", code: `# Binary Tree Level Order Traversal
+# Return values grouped by level: [[3], [9, 20], [15, 7]]
+# Approach: BFS with queue. Process one level at a time.
+
+from collections import deque
+
+def level_order(root):
+    if not root:
+        return []
+    
+    result = []
+    queue = deque([root])
+    
+    while queue:
+        level = []
+        level_size = len(queue)  # Nodes at this level
+        
+        for _ in range(level_size):
+            node = queue.popleft()
+            level.append(node.val)
+            
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        
+        result.append(level)
+    
+    return result
+
+# Time: O(n) | Space: O(n)` },
+    { title: "Coin Change — Dynamic Programming O(n*m)", code: `# Find minimum coins needed to make 'amount'.
+# Approach: Bottom-up DP. dp[x] = min coins for amount x.
+# For each amount, try each coin and take minimum.
+
+def coin_change(coins, amount):
+    # dp[i] = min coins to make amount i
+    dp = [float('inf')] * (amount + 1)
+    dp[0] = 0  # Base case: 0 coins for amount 0
+    
+    for coin in coins:
+        for x in range(coin, amount + 1):
+            # Either don't use this coin (dp[x])
+            # Or use it (dp[x - coin] + 1)
+            dp[x] = min(dp[x], dp[x - coin] + 1)
+    
+    return dp[amount] if dp[amount] != float('inf') else -1
+
+# Example: coin_change([1, 5, 10, 25], 30) → 2 (25 + 5)
+# Time: O(amount * len(coins)) | Space: O(amount)` },
+    { title: "Number of Islands — DFS O(m*n)", code: `# Count connected components of '1's in a grid.
+# Approach: For each unvisited '1', run DFS to mark all
+# connected '1's as visited. Each DFS = one island.
+
+def num_islands(grid):
+    if not grid:
+        return 0
+    
+    rows, cols = len(grid), len(grid[0])
+    count = 0
+    
+    def dfs(r, c):
+        # Out of bounds or water → stop
+        if (r < 0 or r >= rows or
+            c < 0 or c >= cols or
+            grid[r][c] != '1'):
+            return
+        
+        grid[r][c] = '0'  # Mark visited
+        
+        # Explore all 4 directions
+        dfs(r + 1, c)
+        dfs(r - 1, c)
+        dfs(r, c + 1)
+        dfs(r, c - 1)
+    
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == '1':
+                dfs(r, c)
+                count += 1
+    
+    return count
+
+# Time: O(m * n) | Space: O(m * n) recursion stack` },
+    { title: "Course Schedule — Topological Sort O(V+E)", code: `# Can you finish all courses given prerequisites?
+# Approach: Topological sort using BFS (Kahn's algorithm).
+# Build graph + indegree. Start with 0-indegree nodes.
+
+from collections import deque
+
+def can_finish(num_courses, prerequisites):
+    # Build adjacency list and indegree count
+    graph = [[] for _ in range(num_courses)]
+    indegree = [0] * num_courses
+    
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+        indegree[course] += 1
+    
+    # Start with courses that have no prerequisites
+    queue = deque(
+        i for i in range(num_courses) if indegree[i] == 0
+    )
+    
+    completed = 0
+    while queue:
+        node = queue.popleft()
+        completed += 1
+        
+        for neighbor in graph[node]:
+            indegree[neighbor] -= 1
+            if indegree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    # If we completed all courses, no cycle exists
+    return completed == num_courses
+
+# Example: can_finish(4, [[1,0],[2,1],[3,2]]) → True
+# Time: O(V + E) | Space: O(V + E)` }
+];
+
+const csharpProblems = [
+    { title: "Two Sum — Dictionary O(n)", code: `// Two Sum - Find indices of two numbers that sum to target.
+// Approach: Dictionary stores value→index. Check complement exists.
+
+public int[] TwoSum(int[] nums, int target) {
+    var map = new Dictionary<int, int>();
+    
+    for (int i = 0; i < nums.Length; i++) {
+        int complement = target - nums[i];
+        
+        if (map.ContainsKey(complement))
+            return new int[] { map[complement], i };
+        
+        map[nums[i]] = i;
+    }
+    
+    return new int[0];
+}
+
+// Example: TwoSum([2, 7, 11, 15], 9) → [0, 1]
+// Time: O(n) | Space: O(n)` },
+    { title: "Valid Parentheses — Stack O(n)", code: `// Check if brackets are properly matched and nested.
+// Approach: Push open brackets. On close, check stack top matches.
+
+public bool IsValid(string s) {
+    var stack = new Stack<char>();
+    var pairs = new Dictionary<char, char> {
+        { ')', '(' },
+        { '}', '{' },
+        { ']', '[' }
+    };
+    
+    foreach (char c in s) {
+        if (pairs.ContainsKey(c)) {
+            // It's a closing bracket
+            if (stack.Count == 0 || stack.Pop() != pairs[c])
+                return false;
+        } else {
+            // It's an opening bracket
+            stack.Push(c);
+        }
+    }
+    
+    return stack.Count == 0;
+}
+
+// Example: IsValid("({[]})") → true
+// Time: O(n) | Space: O(n)` },
+    { title: "Reverse Linked List — Iterative O(n)", code: `// Reverse a singly linked list in-place.
+// Maintain prev, curr, next pointers. Reverse one link at a time.
+
+public ListNode ReverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode curr = head;
+    
+    while (curr != null) {
+        ListNode next = curr.next;  // Save next
+        curr.next = prev;           // Reverse link
+        prev = curr;                // Advance prev
+        curr = next;                // Advance curr
+    }
+    
+    return prev;  // New head
+}
+
+// Example: 1→2→3→4→5 becomes 5→4→3→2→1
+// Time: O(n) | Space: O(1)` },
+    { title: "LRU Cache — LinkedList + Dictionary O(1)", code: `// O(1) get and put using LinkedList for order, Dictionary for lookup.
+
+public class LRUCache {
+    private int _capacity;
+    private LinkedList<(int key, int val)> _list = new();
+    private Dictionary<int, LinkedListNode<(int key, int val)>> _map = new();
+
+    public LRUCache(int capacity) {
+        _capacity = capacity;
+    }
+
+    public int Get(int key) {
+        if (!_map.ContainsKey(key)) return -1;
+        
+        var node = _map[key];
+        _list.Remove(node);         // Remove from current position
+        _list.AddFirst(node);       // Move to front (most recent)
+        return node.Value.val;
+    }
+
+    public void Put(int key, int value) {
+        if (_map.ContainsKey(key)) {
+            _list.Remove(_map[key]);
+            _map.Remove(key);
+        }
+        
+        if (_list.Count >= _capacity) {
+            // Evict least recently used (last item)
+            _map.Remove(_list.Last.Value.key);
+            _list.RemoveLast();
+        }
+        
+        var node = _list.AddFirst((key, value));
+        _map[key] = node;
+    }
+}
+
+// Time: O(1) for both Get and Put` },
+    { title: "Level Order Traversal — BFS O(n)", code: `// Binary Tree Level Order Traversal using Queue.
+// Process one full level per iteration.
+
+public IList<IList<int>> LevelOrder(TreeNode root) {
+    var result = new List<IList<int>>();
+    if (root == null) return result;
+    
+    var queue = new Queue<TreeNode>();
+    queue.Enqueue(root);
+    
+    while (queue.Count > 0) {
+        var level = new List<int>();
+        int levelSize = queue.Count;
+        
+        for (int i = 0; i < levelSize; i++) {
+            var node = queue.Dequeue();
+            level.Add(node.val);
+            
+            if (node.left != null)
+                queue.Enqueue(node.left);
+            if (node.right != null)
+                queue.Enqueue(node.right);
+        }
+        
+        result.Add(level);
+    }
+    
+    return result;
+}
+
+// Time: O(n) | Space: O(n)` },
+    { title: "Coin Change — DP O(amount * coins)", code: `// Find minimum coins to make amount. Return -1 if impossible.
+// dp[i] = minimum coins needed to make amount i.
+
+public int CoinChange(int[] coins, int amount) {
+    int[] dp = new int[amount + 1];
+    Array.Fill(dp, amount + 1);  // Fill with "impossible" value
+    dp[0] = 0;  // Base case
+    
+    for (int i = 1; i <= amount; i++) {
+        foreach (int coin in coins) {
+            if (coin <= i) {
+                dp[i] = Math.Min(dp[i], dp[i - coin] + 1);
+            }
+        }
+    }
+    
+    return dp[amount] > amount ? -1 : dp[amount];
+}
+
+// Example: CoinChange([1, 5, 10, 25], 30) → 2
+// Time: O(amount * coins.Length) | Space: O(amount)` },
+    { title: "Number of Islands — BFS O(m*n)", code: `// Count connected '1' components in a char grid.
+// BFS from each unvisited '1', marking all connected cells.
+
+public int NumIslands(char[][] grid) {
+    int count = 0;
+    int rows = grid.Length, cols = grid[0].Length;
+    int[][] dirs = { new[]{1,0}, new[]{-1,0}, new[]{0,1}, new[]{0,-1} };
+    
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            if (grid[r][c] == '1') {
+                count++;
+                // BFS to mark entire island
+                var queue = new Queue<(int, int)>();
+                queue.Enqueue((r, c));
+                grid[r][c] = '0';
+                
+                while (queue.Count > 0) {
+                    var (row, col) = queue.Dequeue();
+                    foreach (var d in dirs) {
+                        int nr = row + d[0], nc = col + d[1];
+                        if (nr >= 0 && nr < rows &&
+                            nc >= 0 && nc < cols &&
+                            grid[nr][nc] == '1') {
+                            grid[nr][nc] = '0';
+                            queue.Enqueue((nr, nc));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return count;
+}
+
+// Time: O(m * n) | Space: O(min(m, n)) for BFS queue` },
+    { title: "Merge Intervals — Sort + Merge O(n log n)", code: `// Merge all overlapping intervals.
+// Sort by start, then merge consecutive overlapping ones.
+
+public int[][] Merge(int[][] intervals) {
+    // Sort by start time
+    Array.Sort(intervals, (a, b) => a[0] - b[0]);
+    
+    var result = new List<int[]>();
+    
+    foreach (var interval in intervals) {
+        // If result is empty OR no overlap with last
+        if (result.Count == 0 || result[^1][1] < interval[0]) {
+            result.Add(interval);
+        } else {
+            // Merge: extend end of last interval
+            result[^1][1] = Math.Max(result[^1][1], interval[1]);
+        }
+    }
+    
+    return result.ToArray();
+}
+
+// Example: Merge([[1,3],[2,6],[8,10],[15,18]])
+//        → [[1,6],[8,10],[15,18]]
+// Time: O(n log n) | Space: O(n)` }
+];
+
+const terraformCards = [
+    { title: "Azure Provider + Resource Group", code: `# Configure Azure provider with remote state backend
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
+  }
+  
+  # Store state remotely in Azure Storage
+  backend "azurerm" {
+    resource_group_name  = "tf-state-rg"
+    storage_account_name = "tfstateprod"
+    container_name       = "tfstate"
+    key                  = "prod.terraform.tfstate"
+  }
+}
+
+provider "azurerm" {
+  features {}
+}
+
+# Create a Resource Group
+resource "azurerm_resource_group" "main" {
+  name     = var.resource_group_name
+  location = var.location
+  
+  tags = {
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+    Team        = "SRE"
+  }
+}
+
+# Create a Virtual Network
+resource "azurerm_virtual_network" "main" {
+  name                = "\${var.prefix}-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+}` },
+    { title: "Variables, Outputs & Modules", code: `# variables.tf — Define input parameters
+variable "resource_group_name" {
+  type        = string
+  description = "Name of the Azure resource group"
+}
+
+variable "location" {
+  type    = string
+  default = "eastus2"
+}
+
+variable "environment" {
+  type    = string
+  default = "production"
+  
+  validation {
+    condition     = contains(["dev", "staging", "production"], var.environment)
+    error_message = "Must be dev, staging, or production."
+  }
+}
+
+variable "tags" {
+  type    = map(string)
+  default = {}
+}
+
+# outputs.tf — Expose values for other modules/state
+output "resource_group_id" {
+  value       = azurerm_resource_group.main.id
+  description = "The ID of the resource group"
+}
+
+# Using a module (reusable infrastructure component)
+module "aks_cluster" {
+  source              = "./modules/aks"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = var.location
+  node_count          = 3
+  vm_size             = "Standard_D4s_v3"
+  
+  tags = merge(var.tags, { Component = "AKS" })
+}
+
+# Reference module output
+output "aks_endpoint" {
+  value = module.aks_cluster.kube_config_host
+}` },
+    { title: "AKS Cluster with Node Pool", code: `# Deploy Azure Kubernetes Service (AKS) cluster
+resource "azurerm_kubernetes_cluster" "main" {
+  name                = "\${var.prefix}-aks"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  dns_prefix          = var.prefix
+  kubernetes_version  = "1.28"
+  
+  default_node_pool {
+    name                = "system"
+    node_count          = 3
+    vm_size             = "Standard_D4s_v3"
+    os_disk_size_gb     = 50
+    max_pods            = 110
+    enable_auto_scaling = true
+    min_count           = 2
+    max_count           = 5
+    
+    zones = ["1", "2", "3"]
+  }
+  
+  identity {
+    type = "SystemAssigned"
+  }
+  
+  network_profile {
+    network_plugin    = "azure"
+    load_balancer_sku = "standard"
+    network_policy    = "calico"
+  }
+  
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
+  }
+  
+  tags = var.tags
+}
+
+# Terraform lifecycle commands:
+# terraform init    → Download providers, init backend
+# terraform plan    → Preview changes (dry run)
+# terraform apply   → Apply changes to infrastructure
+# terraform destroy → Remove all managed resources` },
+    { title: "Interview Questions & Key Concepts", isChecklist: true, items: [
+        "What is Terraform state? Why is remote state important?",
+        "How do you handle secrets? (Key Vault references, env vars, never in state)",
+        "Explain 'terraform plan' vs 'terraform apply' — what's a plan file?",
+        "How do you manage multiple environments? (Workspaces vs separate state files)",
+        "What happens when state drifts from actual infra? (terraform refresh/import)",
+        "count vs for_each — when to use each?",
+        "How do modules promote DRY principles? Module versioning?",
+        "What is state locking? Why is it critical in team environments?",
+        "How do you import existing resources into Terraform?",
+        "Explain depends_on vs implicit dependencies"
+    ]}
+];
+
+const yamlCards = [
+    { title: "Azure DevOps — Multi-Stage YAML Pipeline", code: `# azure-pipelines.yml
+# Full CI/CD pipeline with Build, Test, and Deploy stages
+
+trigger:
+  branches:
+    include:
+      - main
+      - release/*
+  paths:
+    exclude:
+      - '**/*.md'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '8.0.x'
+  isMain: \$[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+
+stages:
+# ─── BUILD & TEST ───────────────────────────
+- stage: Build
+  displayName: 'Build & Test'
+  jobs:
+  - job: BuildApp
+    displayName: 'Build Application'
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        version: \$(dotnetVersion)
+    
+    - script: dotnet restore
+      displayName: 'Restore NuGet packages'
+    
+    - script: dotnet build --configuration \$(buildConfiguration) --no-restore
+      displayName: 'Build solution'
+    
+    - script: dotnet test --no-build --logger trx --results-directory TestResults
+      displayName: 'Run unit tests'
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'TestResults/*.trx'
+    
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '\$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+
+# ─── DEPLOY TO STAGING ──────────────────────
+- stage: DeployStaging
+  displayName: 'Deploy to Staging'
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables.isMain, true))
+  jobs:
+  - deployment: DeployStaging
+    environment: 'staging'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'staging-service-conn'
+              appName: 'myapp-staging'
+              package: '\$(Pipeline.Workspace)/drop/**/*.zip'
+
+# ─── DEPLOY TO PRODUCTION ───────────────────
+- stage: DeployProd
+  displayName: 'Deploy to Production'
+  dependsOn: DeployStaging
+  condition: succeeded()
+  jobs:
+  - deployment: DeployProd
+    environment: 'production'  # Has approval gate
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'prod-service-conn'
+              appName: 'myapp-prod'
+              package: '\$(Pipeline.Workspace)/drop/**/*.zip'` },
+    { title: "Pipeline Templates (DRY Principle)", code: `# templates/deploy-template.yml
+# Reusable deployment template — call from main pipeline
+
+parameters:
+  - name: environment
+    type: string
+  - name: serviceConnection
+    type: string
+  - name: appName
+    type: string
+  - name: requiresApproval
+    type: boolean
+    default: false
+
+stages:
+- stage: Deploy_\${{ parameters.environment }}
+  displayName: 'Deploy → \${{ parameters.environment }}'
+  jobs:
+  - deployment: Deploy
+    environment: '\${{ parameters.environment }}'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          
+          - task: AzureCLI@2
+            displayName: 'Deploy via Azure CLI'
+            inputs:
+              azureSubscription: '\${{ parameters.serviceConnection }}'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                echo "Deploying to \${{ parameters.environment }}..."
+                az webapp deploy \\
+                  --name \${{ parameters.appName }} \\
+                  --src-path \$(Pipeline.Workspace)/drop/app.zip \\
+                  --type zip
+                echo "✅ Deployment complete!"
+
+# ─── Usage in main pipeline ─────────────────
+# azure-pipelines.yml
+stages:
+- template: templates/deploy-template.yml
+  parameters:
+    environment: staging
+    serviceConnection: 'staging-conn'
+    appName: 'myapp-staging'
+
+- template: templates/deploy-template.yml
+  parameters:
+    environment: production
+    serviceConnection: 'prod-conn'
+    appName: 'myapp-prod'
+    requiresApproval: true` },
+    { title: "GitHub Actions Workflow", code: `# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  AZURE_WEBAPP_NAME: 'my-web-app'
+  NODE_VERSION: '20'
+
+jobs:
+  # ─── BUILD & TEST ─────────────────────────
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: \${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run linting
+      run: npm run lint
+    
+    - name: Run tests with coverage
+      run: npm test -- --coverage
+    
+    - name: Build application
+      run: npm run build
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-build
+        path: ./dist
+
+  # ─── DEPLOY ───────────────────────────────
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: app-build
+        path: ./dist
+    
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: \${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: \${{ secrets.AZURE_PUBLISH_PROFILE }}
+        package: ./dist` },
+    { title: "Interview Questions", isChecklist: true, items: [
+        "Explain stages vs jobs vs steps in Azure DevOps YAML",
+        "How do you pass variables between stages? (output variables)",
+        "What are pipeline templates? When and why use them?",
+        "How do you implement approval gates before production?",
+        "Explain trigger types: CI, PR, scheduled, manual",
+        "How do you manage secrets in pipelines? (Variable groups, Key Vault)",
+        "Difference between environments and stages?",
+        "How do you implement rollback in a pipeline?",
+        "Explain conditions and expressions (\${{ }}, \\$(var), runtime)",
+        "How do you cache dependencies for faster builds?"
+    ]}
+];
+
+const kubernetesCards = [
+    { title: "Deployment with Health Probes & Resources", code: `# deployment.yaml
+# Production-ready deployment with rolling updates, probes, and resource management
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: production
+  labels:
+    app: web-app
+    version: v2
+spec:
+  replicas: 3
+  
+  # Rolling update strategy for zero-downtime deploys
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # Max extra pods during update
+      maxUnavailable: 0  # Never less than desired count
+  
+  selector:
+    matchLabels:
+      app: web-app
+  
+  template:
+    metadata:
+      labels:
+        app: web-app
+        version: v2
+    spec:
+      containers:
+      - name: web-app
+        image: myregistry.azurecr.io/web-app:v2.1.0
+        ports:
+        - containerPort: 8080
+        
+        # Resource Management
+        resources:
+          requests:          # Minimum guaranteed
+            memory: "128Mi"
+            cpu: "250m"
+          limits:            # Maximum allowed
+            memory: "512Mi"
+            cpu: "1000m"
+        
+        # Liveness: Is the container alive? Restart if fails.
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 30
+          failureThreshold: 3
+        
+        # Readiness: Can it receive traffic? Remove from LB if fails.
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        
+        # Environment from ConfigMap and Secret
+        env:
+        - name: APP_ENV
+          value: "production"
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: host
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: log-level` },
+    { title: "Service, Ingress & Auto-Scaling", code: `# service.yaml — Expose pods internally
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-svc
+  namespace: production
+spec:
+  selector:
+    app: web-app
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP
+
+---
+# ingress.yaml — Expose externally with TLS
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-app-ingress
+  namespace: production
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - app.example.com
+    secretName: app-tls-cert
+  rules:
+  - host: app.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-app-svc
+            port:
+              number: 80
+
+---
+# hpa.yaml — Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-app-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web-app
+  minReplicas: 3
+  maxReplicas: 15
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80` },
+    { title: "kubectl Troubleshooting Commands", code: `# ─── POD DEBUGGING ──────────────────────────
+# List pods with status
+kubectl get pods -n production -o wide
+
+# Detailed pod info (events, conditions, volumes)
+kubectl describe pod <pod-name> -n production
+
+# View logs (current and previous crashed container)
+kubectl logs <pod-name> -n production --tail=100
+kubectl logs <pod-name> -n production --previous
+
+# Execute into a running pod
+kubectl exec -it <pod-name> -n production -- /bin/sh
+
+# ─── RESOURCE MONITORING ────────────────────
+kubectl top pods -n production    # CPU/memory per pod
+kubectl top nodes                 # CPU/memory per node
+kubectl get events --sort-by='.lastTimestamp' -n production
+
+# ─── DEPLOYMENTS & ROLLBACKS ────────────────
+kubectl rollout status deployment/web-app -n production
+kubectl rollout history deployment/web-app -n production
+kubectl rollout undo deployment/web-app -n production
+kubectl rollout undo deployment/web-app --to-revision=3
+
+# Scale manually
+kubectl scale deployment web-app --replicas=5 -n production
+
+# ─── CONFIG & SECRETS ───────────────────────
+kubectl create configmap app-config --from-file=config.json
+kubectl create secret generic db-creds --from-literal=password=s3cr3t
+kubectl get configmaps -n production
+kubectl get secrets -n production
+
+# ─── CLUSTER HEALTH ─────────────────────────
+kubectl get nodes -o wide
+kubectl cluster-info
+kubectl get componentstatuses
+
+# ─── NETWORK DEBUGGING ──────────────────────
+kubectl port-forward svc/web-app-svc 8080:80 -n production
+kubectl get endpoints web-app-svc -n production
+kubectl run tmp-debug --image=busybox -it --rm -- wget -qO- http://web-app-svc` },
+    { title: "Helm Chart Basics", code: `# Chart.yaml — Chart metadata
+apiVersion: v2
+name: web-app
+version: 1.2.0
+appVersion: "2.1.0"
+description: Web application Helm chart
+
+# values.yaml — Default configuration
+replicaCount: 3
+
+image:
+  repository: myregistry.azurecr.io/web-app
+  tag: "2.1.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  host: app.example.com
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 128Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPU: 70
+
+# ─── Helm Commands ──────────────────────────
+# Install a chart
+helm install web-app ./charts/web-app -n production
+
+# Upgrade with custom values
+helm upgrade web-app ./charts/web-app -f prod-values.yaml
+
+# Rollback to previous version
+helm rollback web-app 1
+
+# List installed releases
+helm list -n production
+
+# Template rendering (dry run)
+helm template web-app ./charts/web-app --debug
+
+# Uninstall
+helm uninstall web-app -n production` },
+    { title: "Interview Questions", isChecklist: true, items: [
+        "Explain Pod vs Deployment vs ReplicaSet relationship",
+        "How does a rolling update work? What triggers rollback?",
+        "Liveness vs Readiness vs Startup probes — when use each?",
+        "How do you debug CrashLoopBackOff? (describe, logs --previous)",
+        "Resource requests vs limits — what happens when limits exceeded?",
+        "How does K8s DNS work? How do Services discover each other?",
+        "Ingress Controller vs LoadBalancer Service — tradeoffs?",
+        "How to manage secrets securely? (External Secrets, sealed secrets)",
+        "StatefulSet vs Deployment — when to use each?",
+        "How does HPA work? Custom metrics vs resource metrics?",
+        "Zero-downtime deployment strategies in Kubernetes?",
+        "PersistentVolume vs PVC — explain the binding lifecycle"
+    ]}
+];
+
+const sysDesignCards = [
+    { title: "Design a Monitoring System", items: ["Metrics collection: push (StatsD) vs pull (Prometheus scraping)", "Log aggregation: ELK stack or Azure Log Analytics pipeline", "Distributed tracing: correlation IDs, Jaeger/App Insights", "Alert routing: severity levels, escalation policies, PagerDuty/ICM", "Dashboard design: SLI/SLO visualization, Grafana/Power BI", "Capacity planning: trend analysis, predictive alerts", "Error budgets: remaining budget drives feature vs reliability work"] },
+    { title: "Design an Incident Management Pipeline", items: ["Detection → Alert → Triage → Mitigation → Resolution → RCA", "Severity classification: Sev1 (business down) → Sev4 (cosmetic)", "On-call design: follow-the-sun rotation, escalation timeouts", "Communication: status pages, stakeholder updates, war rooms", "Post-incident reviews: blameless, action items with owners/deadlines", "Automation: auto-remediation for known patterns (like your SRE Agent)", "Metrics: MTTA, MTTD, MTTR, incident volume trends"] },
+    { title: "Design a CI/CD Pipeline", items: ["Branching: trunk-based development vs GitFlow", "Build: compile, lint, SAST scanning, dependency audit", "Test pyramid: unit (fast, many) → integration → E2E (slow, few)", "Artifacts: immutable, versioned, stored in registry", "Deploy strategies: blue-green, canary (% traffic), rolling update", "Rollback: automated on health check failure, one-click manual", "Environments: dev → staging → production with approval gates"] },
+    { title: "Design for High Availability", items: ["Multi-region: active-active vs active-passive failover", "Load balancing: Layer 4 (TCP) vs Layer 7 (HTTP), health checks", "Circuit breaker: prevent cascade failures, fallback responses", "Graceful degradation: disable non-critical features under load", "Data: replication lag, consistency models (eventual vs strong)", "Chaos engineering: inject failures in staging, GameDay exercises", "Capacity: auto-scale on leading indicators, not lagging"] },
+    { title: "Framework: How to Answer SD Questions", items: ["1. CLARIFY — Ask about scale, users, SLAs, constraints (2 min)", "2. HIGH-LEVEL DESIGN — Draw components and data flow (5 min)", "3. DEEP DIVE — Detail 2-3 critical components (15 min)", "4. TRADE-OFFS — Discuss alternatives you considered", "5. RELIABILITY — Failure modes, redundancy, monitoring", "6. SCALABILITY — How does it grow 10x? 100x?", "7. OPERATIONAL — How do you deploy, monitor, debug this?"] }
+];
+
+const behavioralCards = [
+    { title: "Microsoft Leadership Principles", items: ["Growth Mindset — Always learning, embracing challenges and failure", "Customer Obsession — Decisions start with customer impact", "Diversity & Inclusion — Seeking diverse perspectives", "One Microsoft — Collaborating across teams and orgs", "Making a Difference — Impact beyond your immediate role"] },
+    { title: "Your STAR Stories (Ready to Use)", items: ["Leading under pressure: High-sev incident across 20+ services → drove resolution as DRI", "Driving change: Redesigned escalation framework → 32% faster resolution time", "Innovation from scratch: Built AI SRE Agent platform → 30-35% automated resolution", "Scaling leadership: Grew from IC to leading 32 engineers across India & US", "Eliminating waste: Removed 25K stale incidents + 500 noisy alerts → cleaner operations", "Knowledge multiplier: 175+ guides in 5 months → transformed team self-sufficiency", "Influencing without authority: Executive advocacy, aligning engineering priorities with data"] },
+    { title: "Common Behavioral Questions", isChecklist: true, items: [
+        "Tell me about a time you handled a critical production incident",
+        "Describe when you influenced a decision without direct authority",
+        "How did you handle a disagreement with a senior stakeholder?",
+        "Tell me about a project/initiative that failed. What did you learn?",
+        "How do you prioritize when everything feels urgent?",
+        "Describe building something from zero to production",
+        "How do you mentor engineers with different skill levels?",
+        "Tell me about a process you significantly improved",
+        "Describe a time you received critical feedback. How did you respond?",
+        "How do you maintain quality while moving fast?"
+    ]}
+];
+
+const problemTracker = [
+    { num: 1, name: "Two Sum", diff: "easy", pattern: "Hash Map" },
+    { num: 2, name: "Add Two Numbers", diff: "medium", pattern: "Linked List" },
+    { num: 3, name: "Longest Substring Without Repeating", diff: "medium", pattern: "Sliding Window" },
+    { num: 5, name: "Longest Palindromic Substring", diff: "medium", pattern: "DP / Expand" },
+    { num: 15, name: "3Sum", diff: "medium", pattern: "Two Pointers" },
+    { num: 20, name: "Valid Parentheses", diff: "easy", pattern: "Stack" },
+    { num: 21, name: "Merge Two Sorted Lists", diff: "easy", pattern: "Linked List" },
+    { num: 23, name: "Merge K Sorted Lists", diff: "hard", pattern: "Heap" },
+    { num: 33, name: "Search in Rotated Sorted Array", diff: "medium", pattern: "Binary Search" },
+    { num: 46, name: "Permutations", diff: "medium", pattern: "Backtracking" },
+    { num: 49, name: "Group Anagrams", diff: "medium", pattern: "Hash Map" },
+    { num: 53, name: "Maximum Subarray", diff: "medium", pattern: "DP / Kadane's" },
+    { num: 56, name: "Merge Intervals", diff: "medium", pattern: "Sorting" },
+    { num: 70, name: "Climbing Stairs", diff: "easy", pattern: "DP" },
+    { num: 98, name: "Validate BST", diff: "medium", pattern: "Trees / DFS" },
+    { num: 102, name: "Level Order Traversal", diff: "medium", pattern: "Trees / BFS" },
+    { num: 127, name: "Word Ladder", diff: "hard", pattern: "Graph BFS" },
+    { num: 146, name: "LRU Cache", diff: "medium", pattern: "Design" },
+    { num: 200, name: "Number of Islands", diff: "medium", pattern: "Graph DFS" },
+    { num: 207, name: "Course Schedule", diff: "medium", pattern: "Topological Sort" },
+    { num: 215, name: "Kth Largest Element", diff: "medium", pattern: "Heap / QuickSelect" },
+    { num: 236, name: "LCA of Binary Tree", diff: "medium", pattern: "Trees / DFS" },
+    { num: 238, name: "Product of Array Except Self", diff: "medium", pattern: "Arrays" },
+    { num: 295, name: "Find Median from Data Stream", diff: "hard", pattern: "Heap" },
+    { num: 297, name: "Serialize/Deserialize Binary Tree", diff: "hard", pattern: "Trees" },
+    { num: 322, name: "Coin Change", diff: "medium", pattern: "DP" },
+    { num: 347, name: "Top K Frequent Elements", diff: "medium", pattern: "Heap / Bucket" },
+    { num: 380, name: "Insert Delete GetRandom O(1)", diff: "medium", pattern: "Design" },
+    { num: 621, name: "Task Scheduler", diff: "medium", pattern: "Greedy / Heap" },
+    { num: 739, name: "Daily Temperatures", diff: "medium", pattern: "Stack" }
+];
+
+// ============================================================
+// RENDERING FUNCTIONS
+// ============================================================
+function getProgress() {
+    return JSON.parse(localStorage.getItem('interviewPrep') || '{}');
+}
+function saveProgress(data) {
+    localStorage.setItem('interviewPrep', JSON.stringify(data));
+    updateProgressBar();
+}
+
+function updateProgressBar() {
+    const data = getProgress();
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const total = checkboxes.length;
+    const checked = Object.values(data).filter(v => v === true).length;
+    const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+    
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `${checked} / ${total} items completed (${pct}%)`;
+}
+
+function renderSchedule() {
+    const container = document.getElementById('schedule-days');
+    const progress = getProgress();
+    
+    container.innerHTML = scheduleData.map(day => {
+        const dayKey = `day-${day.day}`;
+        const isComplete = progress[dayKey];
+        return `
+        <div class="day-accordion">
+            <div class="day-header" onclick="toggleDay(this)">
+                <div class="day-number ${isComplete ? 'completed' : ''}">D${day.day}</div>
+                <div class="day-info">
+                    <h3>${day.title}</h3>
+                    <p>${day.time} • ${day.topics.length} topics • ${day.infra}</p>
+                </div>
+                <span class="day-toggle">▼</span>
+            </div>
+            <div class="day-body">
+                <div class="day-section">
+                    <h4>📘 Topics & Explanations</h4>
+                    <ul>${day.topics.map(t => `<li><strong>${t.name}:</strong> ${t.desc}</li>`).join('')}</ul>
+                </div>
+                <div class="day-section">
+                    <h4>🔗 Resources & Videos</h4>
+                    <div>${day.resources.map(r => `<a href="${r.url}" target="_blank" class="resource-link ${r.type}">${r.type === 'youtube' ? '▶' : '🔗'} ${r.label}</a>`).join('')}</div>
+                </div>
+                <div class="day-section">
+                    <h4>🏗️ Infrastructure Focus</h4>
+                    <p>${day.infra}</p>
+                </div>
+                <div style="margin-top:1rem;">
+                    <label class="checklist" style="display:flex;align-items:center;gap:0.75rem;border:none;cursor:pointer;">
+                        <input type="checkbox" data-key="${dayKey}" ${isComplete ? 'checked' : ''} onchange="handleCheck(this)">
+                        <span style="font-weight:600;color:var(--green);">Mark Day ${day.day} as Complete</span>
+                    </label>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderCodeCards(containerId, problems) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = problems.map((p, i) => `
+        <div class="card">
+            <h3>${p.title}</h3>
+            <div class="code-card">
+                <div class="code-card-header">
+                    <span class="code-card-title">${containerId.includes('python') ? 'Python' : containerId.includes('csharp') ? 'C#' : ''}</span>
+                    <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                </div>
+                <pre>${escapeHtml(p.code)}</pre>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderInfraCards(containerId, cards) {
+    const container = document.getElementById(containerId);
+    const progress = getProgress();
+    
+    container.innerHTML = cards.map((card, ci) => {
+        if (card.isChecklist) {
+            return `<div class="card"><h3>${card.title}</h3><ul class="checklist">${card.items.map((item, ii) => {
+                const key = `${containerId}-${ci}-${ii}`;
+                return `<li class="${progress[key] ? 'done' : ''}"><input type="checkbox" data-key="${key}" ${progress[key] ? 'checked' : ''} onchange="handleCheck(this)"><span>${item}</span></li>`;
+            }).join('')}</ul></div>`;
+        }
+        return `<div class="card"><h3>${card.title}</h3><div class="code-card"><div class="code-card-header"><span class="code-card-title">${containerId}</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div><pre>${escapeHtml(card.code)}</pre></div></div>`;
+    }).join('');
+}
+
+function renderListCards(containerId, cards) {
+    const container = document.getElementById(containerId);
+    const progress = getProgress();
+    
+    container.innerHTML = cards.map((card, ci) => {
+        if (card.isChecklist) {
+            return `<div class="card"><h3>${card.title}</h3><ul class="checklist">${card.items.map((item, ii) => {
+                const key = `${containerId}-${ci}-${ii}`;
+                return `<li class="${progress[key] ? 'done' : ''}"><input type="checkbox" data-key="${key}" ${progress[key] ? 'checked' : ''} onchange="handleCheck(this)"><span>${item}</span></li>`;
+            }).join('')}</ul></div>`;
+        }
+        return `<div class="card"><h3>${card.title}</h3><ul class="checklist">${card.items.map((item, ii) => {
+            const key = `${containerId}-info-${ci}-${ii}`;
+            return `<li class="${progress[key] ? 'done' : ''}"><input type="checkbox" data-key="${key}" ${progress[key] ? 'checked' : ''} onchange="handleCheck(this)"><span>${item}</span></li>`;
+        }).join('')}</ul></div>`;
+    }).join('');
+}
+
+function renderProblemTracker() {
+    const container = document.getElementById('problem-tracker');
+    const progress = getProgress();
+    
+    container.innerHTML = `
+        <thead><tr><th>✓</th><th>#</th><th>Problem</th><th>Difficulty</th><th>Pattern</th></tr></thead>
+        <tbody>${problemTracker.map((p, i) => {
+            const key = `lc-${p.num}`;
+            return `<tr class="${progress[key] ? 'done' : ''}">
+                <td><input type="checkbox" data-key="${key}" ${progress[key] ? 'checked' : ''} onchange="handleCheck(this)" style="width:16px;height:16px;cursor:pointer;"></td>
+                <td>${p.num}</td>
+                <td><a href="https://leetcode.com/problems/" target="_blank" style="color:var(--accent);text-decoration:none;">${p.name}</a></td>
+                <td><span class="badge badge-${p.diff}">${p.diff}</span></td>
+                <td>${p.pattern}</td>
+            </tr>`;
+        }).join('')}</tbody>
+    `;
+}
+
+// ============================================================
+// EVENT HANDLERS
+// ============================================================
+function toggleDay(header) {
+    const body = header.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.day-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.day-header').forEach(h => h.classList.remove('open'));
+    // Toggle current
+    if (!isOpen) {
+        body.classList.add('open');
+        header.classList.add('open');
+    }
+}
+
+function handleCheck(el) {
+    const data = getProgress();
+    data[el.dataset.key] = el.checked;
+    saveProgress(data);
+    
+    const li = el.closest('li');
+    if (li) li.classList.toggle('done', el.checked);
+    
+    // Update day number styling
+    if (el.dataset.key.startsWith('day-')) {
+        const dayNum = el.closest('.day-accordion').querySelector('.day-number');
+        dayNum.classList.toggle('completed', el.checked);
+    }
+}
+
+function copyCode(btn) {
+    const pre = btn.closest('.code-card').querySelector('pre');
+    navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = '✅ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+
+function escapeHtml(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const group = btn.closest('.tabs-container');
+        group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        group.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        group.querySelector(`#${btn.dataset.tab}`).classList.add('active');
+    });
+});
+
+// ============================================================
+// INITIALIZE
+// ============================================================
+renderSchedule();
+renderCodeCards('python-cards', pythonProblems);
+renderCodeCards('csharp-cards', csharpProblems);
+renderInfraCards('terraform-cards', terraformCards);
+renderInfraCards('yaml-cards', yamlCards);
+renderInfraCards('kubernetes-cards', kubernetesCards);
+renderListCards('sysdesign-cards', sysDesignCards);
+renderListCards('behavioral-cards', behavioralCards);
+renderProblemTracker();
+updateProgressBar();
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }});
+}, { threshold: 0.05 });
+document.querySelectorAll('.section').forEach(s => { s.style.opacity='0'; s.style.transform='translateY(20px)'; s.style.transition='opacity 0.5s,transform 0.5s'; observer.observe(s); });
+</script>
+</body>
+</html>
