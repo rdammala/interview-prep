@@ -202,7 +202,7 @@
         <div class="hero-stats">
             <div class="stat"><span class="stat-value">14</span><span class="stat-label">Days</span></div>
             <div class="stat"><span class="stat-value">60+</span><span class="stat-label">Problems</span></div>
-            <div class="stat"><span class="stat-value">6</span><span class="stat-label">Domains</span></div>
+            <div class="stat"><span class="stat-value">7</span><span class="stat-label">Domains</span></div>
             <div class="stat"><span class="stat-value">2-3hr</span><span class="stat-label">Daily</span></div>
         </div>
         <div class="progress-summary">
@@ -250,6 +250,7 @@
                     <button class="tab-btn active" data-tab="terraform">Terraform</button>
                     <button class="tab-btn" data-tab="yaml">YAML Pipelines</button>
                     <button class="tab-btn" data-tab="kubernetes">Kubernetes</button>
+                    <button class="tab-btn" data-tab="observability">Observability</button>
                     <button class="tab-btn" data-tab="azuredevops">Azure DevOps</button>
                 </div>
                 <div class="tab-content active" id="terraform">
@@ -260,6 +261,9 @@
                 </div>
                 <div class="tab-content" id="kubernetes">
                     <div id="kubernetes-cards"></div>
+                </div>
+                <div class="tab-content" id="observability">
+                    <div id="observability-cards"></div>
                 </div>
                 <div class="tab-content" id="azuredevops">
                     <div id="azuredevops-cards"></div>
@@ -423,7 +427,7 @@ const scheduleData = [
             { label: "URL Shortener Design", url: "https://www.youtube.com/watch?v=fMZMm_0ZhK4", type: "youtube" },
             { label: "K8s Services & Ingress", url: "https://www.youtube.com/watch?v=80Ew_fsV4rM", type: "youtube" }
         ],
-        infra: "K8s Services & Ingress: ClusterIP, NodePort, LoadBalancer types. Ingress rules and controllers."
+        infra: "K8s Services & Ingress: ClusterIP, NodePort, LoadBalancer. Observability intro: Azure Monitor, Application Insights basics."
     },
     {
         day: 8, title: "Binary Search & Sorting", time: "2.5 hr",
@@ -453,7 +457,7 @@ const scheduleData = [
             { label: "Python heapq Docs", url: "https://docs.python.org/3/library/heapq.html", type: "link" },
             { label: "Median Finder Explained", url: "https://www.youtube.com/watch?v=itmhHWaHupI", type: "youtube" }
         ],
-        infra: "Terraform Modules: Create reusable modules, input/output variables, module sources, versioning."
+        infra: "Terraform Modules: Create reusable modules. Observability: Prometheus + Grafana stack, PromQL queries."
     },
     {
         day: 10, title: "Recursion & Backtracking", time: "3 hr",
@@ -483,7 +487,7 @@ const scheduleData = [
             { label: "Google SRE Book (Free)", url: "https://sre.google/sre-book/table-of-contents/", type: "link" },
             { label: "Terraform Azure Provider", url: "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs", type: "link" }
         ],
-        infra: "Terraform Azure: Deploy resource groups, VNets, AKS clusters. Practice with 'azurerm' provider."
+        infra: "Terraform Azure: Deploy resource groups, VNets, AKS. Observability: SLIs/SLOs, error budgets, alerting strategy."
     },
     {
         day: 12, title: "Mixed Coding + K8s Troubleshooting", time: "3 hr",
@@ -497,7 +501,7 @@ const scheduleData = [
             { label: "K8s Troubleshooting Guide", url: "https://kubernetes.io/docs/tasks/debug/", type: "link" },
             { label: "K8s Debugging Pods", url: "https://www.youtube.com/watch?v=K4FUj2S2Sms", type: "youtube" }
         ],
-        infra: "Full K8s workflow: Write Deployment, Service, Ingress, HPA. Debug with kubectl commands."
+        infra: "Full K8s workflow: Deployment, Service, Ingress, HPA. Observability: distributed tracing, structured logging, KQL queries."
     },
     {
         day: 13, title: "Mock Interview Day", time: "3 hr",
@@ -527,7 +531,7 @@ const scheduleData = [
             { label: "Interview Day Tips", url: "https://www.youtube.com/watch?v=0Z9RW_hhUT4", type: "youtube" },
             { label: "Interview Tips", url: "https://careers.microsoft.com/v2/global/en/interviewtips", type: "link" }
         ],
-        infra: "Review all infra notes. Be ready to explain Terraform state, K8s probes, YAML pipeline stages clearly."
+        infra: "Review all infra notes. Be ready to explain Terraform state, K8s probes, YAML pipelines, and observability (SLIs/SLOs, alerting, tracing) clearly."
     }
 ];
 
@@ -637,6 +641,33 @@ const azureDevOpsCards = [
         "How do you troubleshoot a failing pipeline? (logs, debug variable)",
         "Explain the Azure DevOps REST API \u2014 common automation scenarios",
         "How do you migrate from Classic pipelines to YAML?"
+    ]}
+];
+
+// ============================================================
+// DATA: Observability Tab (NEW)
+// ============================================================
+const observabilityCards = [
+    { title: "Azure Monitor & Application Insights", code: "# Azure Monitor \u2014 Unified Observability Platform\n#\n# Core Components:\n# 1. Metrics     \u2192 Numeric time-series data (CPU, memory, requests/sec)\n# 2. Logs        \u2192 Structured/unstructured data (Log Analytics workspace)\n# 3. Traces      \u2192 Distributed tracing (Application Insights)\n# 4. Alerts      \u2192 Proactive notifications based on conditions\n# 5. Dashboards  \u2192 Azure Dashboards, Workbooks, Grafana\n\n# Application Insights Setup (.NET):\nbuilder.Services.AddApplicationInsightsTelemetry();\n\n# KQL Query \u2014 Find slow API responses\nrequests\n| where timestamp > ago(1h)\n| where duration > 2000  // >2 seconds\n| summarize count(), avg(duration) by name\n| order by count_ desc\n\n# KQL \u2014 Exception trends\nexceptions\n| where timestamp > ago(24h)\n| summarize count() by bin(timestamp, 1h), type\n| render timechart\n\n# KQL \u2014 Dependency failures (DB, APIs)\ndependencies\n| where success == false\n| where timestamp > ago(4h)\n| summarize failCount=count() by target, type\n| order by failCount desc\n\n# KQL \u2014 Custom availability check\navailabilityResults\n| where timestamp > ago(1d)\n| summarize uptimePct = countif(success == true) * 100.0 / count()\n  by name, bin(timestamp, 1h)\n| render timechart" },
+    { title: "Prometheus + Grafana Stack", code: "# Prometheus \u2014 Pull-based metrics collection\n#\n# Architecture:\n# Targets (apps expose /metrics) \u2192 Prometheus scrapes \u2192 TSDB \u2192 PromQL \u2192 Grafana\n\n# prometheus.yml \u2014 Scrape configuration\nglobal:\n  scrape_interval: 15s\n  evaluation_interval: 15s\n\nrule_files:\n  - 'alerts.yml'\n\nscrape_configs:\n  - job_name: 'kubernetes-pods'\n    kubernetes_sd_configs:\n      - role: pod\n    relabel_configs:\n      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]\n        action: keep\n        regex: true\n      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]\n        action: replace\n        target_label: __address__\n\n# PromQL Examples:\n# Request rate per second (last 5 min)\nrate(http_requests_total[5m])\n\n# 99th percentile latency\nhistogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))\n\n# Error rate percentage\nsum(rate(http_requests_total{status=~\"5..\"}[5m]))\n/ sum(rate(http_requests_total[5m])) * 100\n\n# CPU usage by pod\nsum(rate(container_cpu_usage_seconds_total[5m])) by (pod)\n\n# Memory usage percentage\ncontainer_memory_usage_bytes / container_spec_memory_limit_bytes * 100" },
+    { title: "SLIs, SLOs & Error Budgets", code: "# SLI (Service Level Indicator)\n# A quantitative measure of service behavior\n# Examples:\n#   - Availability: successful requests / total requests\n#   - Latency: % requests served < 200ms\n#   - Throughput: requests processed per second\n#   - Error rate: failed requests / total requests\n\n# SLO (Service Level Objective)\n# Target value for an SLI over a time window\n# Examples:\n#   - 99.9% availability over 30 days\n#   - 95% of requests < 200ms latency\n#   - Error rate < 0.1% per rolling 7 days\n\n# Error Budget = 1 - SLO\n# If SLO = 99.9%, error budget = 0.1%\n# In 30 days: 0.1% of 43,200 min = 43.2 min of downtime allowed\n\n# Error Budget Policy:\n# Budget remaining > 50%:  Ship features freely\n# Budget remaining 20-50%: Ship with extra review\n# Budget remaining < 20%:  Freeze features, focus reliability\n# Budget exhausted:        Full reliability sprint\n\n# Burn Rate Alerts:\n# Fast burn: consuming budget 14.4x normal \u2192 alert in 1 hour\n# Slow burn: consuming budget 3x normal \u2192 alert in 6 hours\n\n# KQL for SLO tracking:\nrequests\n| where timestamp > ago(30d)\n| summarize\n    total = count(),\n    successful = countif(resultCode startswith \"2\" or resultCode startswith \"3\"),\n    sli = countif(resultCode startswith \"2\" or resultCode startswith \"3\") * 100.0 / count()\n| extend slo = 99.9,\n         error_budget_pct = (sli - 99.9) / (100 - 99.9) * 100" },
+    { title: "Alerting Strategy & On-Call", code: "# Alert Design Principles:\n# 1. Alert on SYMPTOMS not CAUSES (users affected, not CPU high)\n# 2. Every alert must be ACTIONABLE (if no action needed, remove it)\n# 3. Route to the RIGHT person (service ownership model)\n# 4. Include CONTEXT (runbook link, dashboard, recent changes)\n\n# Alert Severity Levels:\n# P1/Sev1: Customer-facing outage, immediate page\n# P2/Sev2: Degraded performance, page within 15 min\n# P3/Sev3: Non-urgent, ticket created, next business day\n# P4/Sev4: Informational, dashboard only\n\n# Azure Monitor Alert Rule (Terraform):\nresource \"azurerm_monitor_metric_alert\" \"high_error_rate\" {\n  name                = \"high-error-rate-alert\"\n  resource_group_name = azurerm_resource_group.main.name\n  scopes              = [azurerm_application_insights.main.id]\n  severity            = 1\n  frequency           = \"PT1M\"\n  window_size         = \"PT5M\"\n\n  criteria {\n    metric_namespace = \"microsoft.insights/components\"\n    metric_name      = \"requests/failed\"\n    aggregation      = \"Count\"\n    operator         = \"GreaterThan\"\n    threshold        = 50\n  }\n\n  action {\n    action_group_id = azurerm_monitor_action_group.oncall.id\n  }\n}\n\n# Prometheus AlertManager rules (alerts.yml):\ngroups:\n- name: sre-alerts\n  rules:\n  - alert: HighErrorRate\n    expr: sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) > 0.01\n    for: 5m\n    labels:\n      severity: critical\n    annotations:\n      summary: \"Error rate above 1% for 5 minutes\"\n      runbook: \"https://wiki/runbooks/high-error-rate\"" },
+    { title: "Distributed Tracing & Logging", code: "# Three Pillars of Observability:\n# 1. METRICS  \u2192 What is happening? (aggregated numbers)\n# 2. LOGS     \u2192 Why is it happening? (detailed events)\n# 3. TRACES   \u2192 Where is it happening? (request flow across services)\n\n# OpenTelemetry \u2014 Vendor-neutral instrumentation\n# SDK auto-instruments: HTTP, gRPC, DB, message queues\n# Exports to: Azure Monitor, Jaeger, Zipkin, Datadog\n\n# Structured Logging Best Practices:\n# - Use structured format (JSON) not plain text\n# - Include correlation ID in every log line\n# - Log at appropriate levels (Error/Warn/Info/Debug)\n# - Include context: user ID, request ID, service name\n# - Never log sensitive data (PII, tokens, passwords)\n\n# Example structured log:\n{\n  \"timestamp\": \"2026-06-12T10:30:00Z\",\n  \"level\": \"error\",\n  \"service\": \"payment-api\",\n  \"correlationId\": \"abc-123-def\",\n  \"message\": \"Payment processing failed\",\n  \"error\": \"timeout after 30s\",\n  \"userId\": \"user_789\",\n  \"orderId\": \"order_456\",\n  \"duration_ms\": 30001\n}\n\n# Log Analytics (KQL) \u2014 Trace a request across services:\ntraces\n| where operation_Id == \"abc-123-def\"\n| order by timestamp asc\n| project timestamp, cloud_RoleName, message, severityLevel\n\n# Distributed trace correlation:\n# Parent span (API Gateway) \u2192 Child span (Auth Service)\n#   \u2192 Child span (Payment Service) \u2192 Child span (Database)\n# Each span has: traceId, spanId, parentSpanId, duration, status" },
+    { title: "Interview Q&A", isChecklist: true, items: [
+        "What are the three pillars of observability? How do they complement each other?",
+        "Explain SLI vs SLO vs SLA \u2014 give real examples for a web service",
+        "What is an error budget? How do you use it to make release decisions?",
+        "How do you design alerts that are actionable and not noisy?",
+        "Prometheus pull model vs push model (StatsD/Datadog) \u2014 tradeoffs?",
+        "What is distributed tracing? How does correlation ID propagation work?",
+        "Explain KQL basics \u2014 how would you find the top 5 slowest endpoints?",
+        "How do you set up burn-rate alerts for SLO monitoring?",
+        "What is OpenTelemetry? Why is vendor-neutral instrumentation important?",
+        "How do you handle log volume at scale? (sampling, retention, tiering)",
+        "Azure Monitor vs Prometheus+Grafana \u2014 when would you choose each?",
+        "What makes a good dashboard? What should be on a service health dashboard?",
+        "How do you correlate metrics, logs, and traces during an incident?",
+        "Explain golden signals: latency, traffic, errors, saturation"
     ]}
 ];
 
@@ -1092,6 +1123,7 @@ renderCodeCards('csharp-cards', csharpProblems);
 renderInfraCards('terraform-cards', terraformCards);
 renderInfraCards('yaml-cards', yamlCards);
 renderInfraCards('kubernetes-cards', kubernetesCards);
+renderInfraCards('observability-cards', observabilityCards);
 renderInfraCards('azuredevops-cards', azureDevOpsCards);
 renderListCards('sysdesign-cards', sysDesignCards);
 renderListCards('behavioral-cards', behavioralCards);
