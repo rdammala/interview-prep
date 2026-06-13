@@ -191,8 +191,8 @@
 
     <!-- Scroll Buttons -->
     <div class="scroll-buttons">
-        <button class="scroll-btn" id="scrollUp" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Page Up">&#9650;</button>
-        <button class="scroll-btn" id="scrollDown" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="Page Down">&#9660;</button>
+        <button class="scroll-btn" id="scrollUp" onclick="window.scrollBy({top:-window.innerHeight,behavior:'smooth'})" title="Page Up">&#9650;</button>
+        <button class="scroll-btn" id="scrollDown" onclick="window.scrollBy({top:window.innerHeight,behavior:'smooth'})" title="Page Down">&#9660;</button>
     </div>
 
     <!-- Hero -->
@@ -253,16 +253,16 @@
                     <button class="tab-btn" data-tab="azuredevops">Azure DevOps</button>
                 </div>
                 <div class="tab-content active" id="terraform">
-                    <div class="card-grid" id="terraform-cards"></div>
+                    <div id="terraform-cards"></div>
                 </div>
                 <div class="tab-content" id="yaml">
-                    <div class="card-grid" id="yaml-cards"></div>
+                    <div id="yaml-cards"></div>
                 </div>
                 <div class="tab-content" id="kubernetes">
-                    <div class="card-grid" id="kubernetes-cards"></div>
+                    <div id="kubernetes-cards"></div>
                 </div>
                 <div class="tab-content" id="azuredevops">
-                    <div class="card-grid" id="azuredevops-cards"></div>
+                    <div id="azuredevops-cards"></div>
                 </div>
             </div>
         </div>
@@ -562,7 +562,7 @@ const terraformCards = [
     { title: "Azure Provider + Resource Group", code: "# Configure Azure provider with remote state backend\nterraform {\n  required_providers {\n    azurerm = {\n      source  = \"hashicorp/azurerm\"\n      version = \"~> 3.0\"\n    }\n  }\n  \n  backend \"azurerm\" {\n    resource_group_name  = \"tf-state-rg\"\n    storage_account_name = \"tfstateprod\"\n    container_name       = \"tfstate\"\n    key                  = \"prod.terraform.tfstate\"\n  }\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"main\" {\n  name     = var.resource_group_name\n  location = var.location\n  \n  tags = {\n    Environment = var.environment\n    ManagedBy   = \"Terraform\"\n    Team        = \"SRE\"\n  }\n}\n\nresource \"azurerm_virtual_network\" \"main\" {\n  name                = \"${var.prefix}-vnet\"\n  address_space       = [\"10.0.0.0/16\"]\n  location            = azurerm_resource_group.main.location\n  resource_group_name = azurerm_resource_group.main.name\n}" },
     { title: "Variables, Outputs & Modules", code: "# variables.tf\nvariable \"resource_group_name\" {\n  type        = string\n  description = \"Name of the Azure resource group\"\n}\n\nvariable \"location\" {\n  type    = string\n  default = \"eastus2\"\n}\n\nvariable \"environment\" {\n  type    = string\n  default = \"production\"\n  \n  validation {\n    condition     = contains([\"dev\", \"staging\", \"production\"], var.environment)\n    error_message = \"Must be dev, staging, or production.\"\n  }\n}\n\n# outputs.tf\noutput \"resource_group_id\" {\n  value       = azurerm_resource_group.main.id\n  description = \"The ID of the resource group\"\n}\n\n# Using a module\nmodule \"aks_cluster\" {\n  source              = \"./modules/aks\"\n  resource_group_name = azurerm_resource_group.main.name\n  location            = var.location\n  node_count          = 3\n  vm_size             = \"Standard_D4s_v3\"\n  tags = merge(var.tags, { Component = \"AKS\" })\n}\n\noutput \"aks_endpoint\" {\n  value = module.aks_cluster.kube_config_host\n}" },
     { title: "AKS Cluster with Node Pool", code: "resource \"azurerm_kubernetes_cluster\" \"main\" {\n  name                = \"${var.prefix}-aks\"\n  location            = azurerm_resource_group.main.location\n  resource_group_name = azurerm_resource_group.main.name\n  dns_prefix          = var.prefix\n  kubernetes_version  = \"1.28\"\n  \n  default_node_pool {\n    name                = \"system\"\n    node_count          = 3\n    vm_size             = \"Standard_D4s_v3\"\n    enable_auto_scaling = true\n    min_count           = 2\n    max_count           = 5\n    zones = [\"1\", \"2\", \"3\"]\n  }\n  \n  identity {\n    type = \"SystemAssigned\"\n  }\n  \n  network_profile {\n    network_plugin    = \"azure\"\n    load_balancer_sku = \"standard\"\n    network_policy    = \"calico\"\n  }\n  \n  oms_agent {\n    log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id\n  }\n  \n  tags = var.tags\n}\n\n# terraform init    \u2192 Download providers, init backend\n# terraform plan    \u2192 Preview changes (dry run)\n# terraform apply   \u2192 Apply changes to infrastructure\n# terraform destroy \u2192 Remove all managed resources" },
-    { title: "Interview Questions & Key Concepts", isChecklist: true, items: [
+    { title: "Interview Q&A", isChecklist: true, items: [
         "What is Terraform state? Why is remote state important?",
         "How do you handle secrets? (Key Vault references, env vars, never in state)",
         "Explain 'terraform plan' vs 'terraform apply' \u2014 what's a plan file?",
@@ -580,7 +580,7 @@ const yamlCards = [
     { title: "Azure DevOps \u2014 Multi-Stage YAML Pipeline", code: "# azure-pipelines.yml\ntrigger:\n  branches:\n    include:\n      - main\n      - release/*\n  paths:\n    exclude:\n      - '**/*.md'\n\npool:\n  vmImage: 'ubuntu-latest'\n\nvariables:\n  buildConfiguration: 'Release'\n  dotnetVersion: '8.0.x'\n  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]\n\nstages:\n- stage: Build\n  displayName: 'Build & Test'\n  jobs:\n  - job: BuildApp\n    steps:\n    - task: UseDotNet@2\n      inputs:\n        version: $(dotnetVersion)\n    - script: dotnet restore\n    - script: dotnet build --configuration $(buildConfiguration)\n    - script: dotnet test --no-build --logger trx\n    - task: PublishTestResults@2\n      inputs:\n        testResultsFiles: 'TestResults/*.trx'\n    - task: PublishBuildArtifacts@1\n      inputs:\n        PathtoPublish: '$(Build.ArtifactStagingDirectory)'\n        ArtifactName: 'drop'\n\n- stage: DeployStaging\n  dependsOn: Build\n  condition: and(succeeded(), eq(variables.isMain, true))\n  jobs:\n  - deployment: DeployStaging\n    environment: 'staging'\n    strategy:\n      runOnce:\n        deploy:\n          steps:\n          - task: AzureWebApp@1\n            inputs:\n              azureSubscription: 'staging-conn'\n              appName: 'myapp-staging'" },
     { title: "Pipeline Templates (DRY Principle)", code: "# templates/deploy-template.yml\nparameters:\n  - name: environment\n    type: string\n  - name: serviceConnection\n    type: string\n  - name: appName\n    type: string\n\nstages:\n- stage: Deploy_${{ parameters.environment }}\n  displayName: 'Deploy \u2192 ${{ parameters.environment }}'\n  jobs:\n  - deployment: Deploy\n    environment: '${{ parameters.environment }}'\n    strategy:\n      runOnce:\n        deploy:\n          steps:\n          - download: current\n            artifact: drop\n          - task: AzureCLI@2\n            inputs:\n              azureSubscription: '${{ parameters.serviceConnection }}'\n              scriptType: 'bash'\n              inlineScript: |\n                az webapp deploy \\\n                  --name ${{ parameters.appName }} \\\n                  --src-path $(Pipeline.Workspace)/drop/app.zip \\\n                  --type zip\n\n# Usage in main pipeline:\nstages:\n- template: templates/deploy-template.yml\n  parameters:\n    environment: staging\n    serviceConnection: 'staging-conn'\n    appName: 'myapp-staging'\n- template: templates/deploy-template.yml\n  parameters:\n    environment: production\n    serviceConnection: 'prod-conn'\n    appName: 'myapp-prod'" },
     { title: "GitHub Actions Workflow", code: "# .github/workflows/ci-cd.yml\nname: CI/CD Pipeline\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\nenv:\n  AZURE_WEBAPP_NAME: 'my-web-app'\n  NODE_VERSION: '20'\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v4\n    - name: Setup Node.js\n      uses: actions/setup-node@v4\n      with:\n        node-version: ${{ env.NODE_VERSION }}\n        cache: 'npm'\n    - run: npm ci\n    - run: npm run lint\n    - run: npm test -- --coverage\n    - run: npm run build\n    - uses: actions/upload-artifact@v4\n      with:\n        name: app-build\n        path: ./dist\n\n  deploy:\n    needs: build\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    steps:\n    - uses: actions/download-artifact@v4\n      with:\n        name: app-build\n        path: ./dist\n    - uses: azure/webapps-deploy@v2\n      with:\n        app-name: ${{ env.AZURE_WEBAPP_NAME }}\n        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}\n        package: ./dist" },
-    { title: "Interview Questions", isChecklist: true, items: [
+    { title: "Interview Q&A", isChecklist: true, items: [
         "Explain stages vs jobs vs steps in Azure DevOps YAML",
         "How do you pass variables between stages? (output variables)",
         "What are pipeline templates? When and why use them?",
@@ -598,7 +598,7 @@ const kubernetesCards = [
     { title: "Deployment with Health Probes & Resources", code: "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web-app\n  namespace: production\nspec:\n  replicas: 3\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n  selector:\n    matchLabels:\n      app: web-app\n  template:\n    metadata:\n      labels:\n        app: web-app\n    spec:\n      containers:\n      - name: web-app\n        image: myregistry.azurecr.io/web-app:v2.1.0\n        ports:\n        - containerPort: 8080\n        resources:\n          requests:\n            memory: \"128Mi\"\n            cpu: \"250m\"\n          limits:\n            memory: \"512Mi\"\n            cpu: \"1000m\"\n        livenessProbe:\n          httpGet:\n            path: /healthz\n            port: 8080\n          initialDelaySeconds: 15\n          periodSeconds: 30\n        readinessProbe:\n          httpGet:\n            path: /ready\n            port: 8080\n          initialDelaySeconds: 5\n          periodSeconds: 10\n        env:\n        - name: DB_HOST\n          valueFrom:\n            secretKeyRef:\n              name: db-credentials\n              key: host" },
     { title: "Service, Ingress & HPA", code: "apiVersion: v1\nkind: Service\nmetadata:\n  name: web-app-svc\nspec:\n  selector:\n    app: web-app\n  ports:\n  - port: 80\n    targetPort: 8080\n  type: ClusterIP\n---\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: web-app-ingress\n  annotations:\n    nginx.ingress.kubernetes.io/rewrite-target: /\n    cert-manager.io/cluster-issuer: \"letsencrypt-prod\"\nspec:\n  tls:\n  - hosts:\n    - app.example.com\n    secretName: app-tls-cert\n  rules:\n  - host: app.example.com\n    http:\n      paths:\n      - path: /\n        pathType: Prefix\n        backend:\n          service:\n            name: web-app-svc\n            port:\n              number: 80\n---\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: web-app-hpa\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: web-app\n  minReplicas: 3\n  maxReplicas: 15\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 70" },
     { title: "kubectl Troubleshooting Commands", code: "# POD DEBUGGING\nkubectl get pods -n production -o wide\nkubectl describe pod <pod-name> -n production\nkubectl logs <pod-name> -n production --tail=100\nkubectl logs <pod-name> --previous\nkubectl exec -it <pod-name> -- /bin/sh\n\n# RESOURCE MONITORING\nkubectl top pods -n production\nkubectl top nodes\nkubectl get events --sort-by='.lastTimestamp'\n\n# DEPLOYMENTS & ROLLBACKS\nkubectl rollout status deployment/web-app\nkubectl rollout history deployment/web-app\nkubectl rollout undo deployment/web-app\nkubectl rollout undo deployment/web-app --to-revision=3\nkubectl scale deployment web-app --replicas=5\n\n# CONFIG & SECRETS\nkubectl create configmap app-config --from-file=config.json\nkubectl create secret generic db-creds --from-literal=password=s3cr3t\n\n# NETWORK DEBUGGING\nkubectl port-forward svc/web-app-svc 8080:80\nkubectl get endpoints web-app-svc\nkubectl run tmp-debug --image=busybox -it --rm -- wget -qO- http://web-app-svc" },
-    { title: "Interview Questions", isChecklist: true, items: [
+    { title: "Interview Q&A", isChecklist: true, items: [
         "Explain Pod vs Deployment vs ReplicaSet relationship",
         "How does a rolling update work? What triggers rollback?",
         "Liveness vs Readiness vs Startup probes \u2014 when use each?",
@@ -916,15 +916,24 @@ function renderInfraCards(containerId, cards) {
     const container = document.getElementById(containerId);
     const progress = getProgress();
     
-    container.innerHTML = cards.map((card, ci) => {
-        if (card.isChecklist) {
-            return `<div class="card"><h3>${card.title}</h3><ul class="checklist">${card.items.map((item, ii) => {
-                const key = `${containerId}-${ci}-${ii}`;
+    const codeCards = cards.filter(c => !c.isChecklist);
+    const checklistCards = cards.filter(c => c.isChecklist);
+    
+    let html = `<div class="card-grid">${codeCards.map((card, ci) => {
+        return `<div class="card"><h3>${card.title}</h3><div class="code-card"><div class="code-card-header" onclick="toggleCode(this)"><span class="code-card-title">${containerId}</span><div><button class="code-card-toggle">\u25B6 Show Code</button><button class="copy-btn" onclick="event.stopPropagation();copyCode(this)">\uD83D\uDCCB Copy</button></div></div><pre class="collapsed">${escapeHtml(card.code)}</pre></div></div>`;
+    }).join('')}</div>`;
+    
+    if (checklistCards.length > 0) {
+        html += checklistCards.map((card, ci) => {
+            const realIdx = cards.indexOf(card);
+            return `<div class="card" style="margin-top:1.5rem;"><h3>${card.title}</h3><ul class="checklist">${card.items.map((item, ii) => {
+                const key = `${containerId}-${realIdx}-${ii}`;
                 return `<li class="${progress[key] ? 'done' : ''}"><input type="checkbox" data-key="${key}" ${progress[key] ? 'checked' : ''} onchange="handleCheck(this)"><span>${item}</span></li>`;
             }).join('')}</ul></div>`;
-        }
-        return `<div class="card"><h3>${card.title}</h3><div class="code-card"><div class="code-card-header" onclick="toggleCode(this)"><span class="code-card-title">${containerId}</span><div><button class="code-card-toggle">\u25B6 Show Code</button><button class="copy-btn" onclick="event.stopPropagation();copyCode(this)">\uD83D\uDCCB Copy</button></div></div><pre class="collapsed">${escapeHtml(card.code)}</pre></div></div>`;
-    }).join('');
+        }).join('');
+    }
+    
+    container.innerHTML = html;
 }
 
 function renderListCards(containerId, cards) {
@@ -1070,8 +1079,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     const maxScroll = document.body.scrollHeight - window.innerHeight;
-    document.getElementById('scrollUp').classList.toggle('visible', scrollY > 300);
-    document.getElementById('scrollDown').classList.toggle('visible', scrollY < maxScroll - 300);
+    document.getElementById('scrollUp').classList.toggle('visible', scrollY > 200);
+    document.getElementById('scrollDown').classList.toggle('visible', scrollY < maxScroll - 200);
 });
 
 // ============================================================
