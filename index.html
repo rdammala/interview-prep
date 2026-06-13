@@ -102,7 +102,8 @@
 
         /* Cards */
         .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.3s ease; }
+        .card.expanded { grid-column: 1 / -1; border-color: var(--accent); box-shadow: 0 0 30px rgba(0,180,216,0.15); z-index: 10; }
         .card h3 { color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem; }
 
         /* Collapsible Code Cards */
@@ -115,8 +116,10 @@
         .code-card:hover .copy-btn { opacity: 1; }
         .copy-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
         .copy-btn.copied { background: var(--green); color: white; border-color: var(--green); }
-        .code-card pre { padding: 1.2rem 1.5rem; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.82rem; line-height: 1.9; color: var(--text); white-space: pre; tab-size: 4; max-height: 600px; }
+        .code-card pre { padding: 1.2rem 1.5rem; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.9; color: var(--text); white-space: pre; tab-size: 4; }
         .code-card pre.collapsed { display: none; }
+        .card.expanded .code-card pre { max-height: none; font-size: 0.88rem; }
+        .card.expanded .copy-btn { opacity: 1; }
 
         /* Checklist - FIXED */
         .checklist { list-style: none; padding: 0; }
@@ -1042,13 +1045,32 @@ function toggleDay(header) {
 function toggleCode(header) {
     const pre = header.nextElementSibling;
     const btn = header.querySelector('.code-card-toggle');
+    const card = header.closest('.card');
     const isCollapsed = pre.classList.contains('collapsed');
+    
+    // Collapse any other expanded card in same grid
+    if (isCollapsed && card) {
+        const grid = card.closest('.card-grid');
+        if (grid) {
+            grid.querySelectorAll('.card.expanded').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('expanded');
+                    c.querySelector('pre').classList.add('collapsed');
+                    const otherBtn = c.querySelector('.code-card-toggle');
+                    if (otherBtn) otherBtn.textContent = '\u25B6 Show Code';
+                }
+            });
+        }
+    }
+    
     if (isCollapsed) {
         pre.classList.remove('collapsed');
         btn.textContent = '\u25BC Hide Code';
+        if (card) card.classList.add('expanded');
     } else {
         pre.classList.add('collapsed');
         btn.textContent = '\u25B6 Show Code';
+        if (card) card.classList.remove('expanded');
     }
 }
 
