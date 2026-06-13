@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microsoft Interview Prep — 2-Week Intensive Plan</title>
+    <title>Interview Prep Bootcamp for SRE/DevOps</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
@@ -39,6 +39,12 @@
         .nav-link { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.85rem; transition: color 0.3s; }
         .nav-link:hover { color: var(--primary); }
         .progress-bar { position: fixed; top: 60px; left: 0; height: 3px; background: var(--gradient); z-index: 999; transition: width 0.3s; }
+
+        /* Scroll Buttons */
+        .scroll-buttons { position: fixed; bottom: 2rem; right: 2rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 1000; }
+        .scroll-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: all 0.3s; opacity: 0; pointer-events: none; }
+        .scroll-btn.visible { opacity: 1; pointer-events: auto; }
+        .scroll-btn:hover { background: var(--accent); transform: scale(1.1); }
 
         /* Hero */
         .hero { padding: 7rem 2rem 3rem; text-align: center; max-width: 900px; margin: 0 auto; }
@@ -78,7 +84,7 @@
         .day-section p, .day-section li { color: var(--text-muted); font-size: 0.88rem; line-height: 1.8; }
         .day-section ul { list-style: none; padding-left: 0; }
         .day-section li { padding: 0.3rem 0; padding-left: 1.5rem; position: relative; }
-        .day-section li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
+        .day-section li::before { content: '\25B8'; position: absolute; left: 0; color: var(--accent); }
         .resource-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin: 0.25rem 0.5rem 0.25rem 0; padding: 0.25rem 0.6rem; background: rgba(0,180,216,0.1); border-radius: 6px; transition: background 0.2s; }
         .resource-link:hover { background: rgba(0,180,216,0.2); }
         .resource-link.youtube { color: #ff4444; background: rgba(255,68,68,0.1); }
@@ -99,32 +105,45 @@
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
         .card h3 { color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem; }
 
-        /* Code Blocks - IMPROVED */
+        /* Collapsible Code Cards */
         .code-card { position: relative; background: #0d1117; border: 1px solid var(--border); border-radius: 10px; margin: 1rem 0; overflow: hidden; }
-        .code-card-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); }
+        .code-card-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); cursor: pointer; }
         .code-card-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .code-card-toggle { font-size: 0.7rem; color: var(--accent); font-weight: 600; padding: 0.2rem 0.5rem; border: 1px solid var(--accent); border-radius: 4px; background: transparent; cursor: pointer; transition: all 0.2s; margin-right: 0.5rem; }
+        .code-card-toggle:hover { background: var(--accent); color: white; }
         .copy-btn { padding: 0.3rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-muted); font-size: 0.7rem; cursor: pointer; opacity: 0; transition: all 0.2s; }
         .code-card:hover .copy-btn { opacity: 1; }
         .copy-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
         .copy-btn.copied { background: var(--green); color: white; border-color: var(--green); }
-        .code-card pre { padding: 1.2rem 1.5rem; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.82rem; line-height: 1.9; color: var(--text); white-space: pre; tab-size: 4; }
-        .code-card pre .comment { color: #6a9955; font-style: italic; }
-        .code-card pre .keyword { color: #c586c0; }
-        .code-card pre .string { color: #ce9178; }
-        .code-card pre .function { color: #dcdcaa; }
-        .code-card pre .number { color: #b5cea8; }
-        .code-card pre .type { color: #4ec9b0; }
-        .code-card pre .variable { color: #9cdcfe; }
-        .code-card pre .operator { color: #d4d4d4; }
+        .code-card pre { padding: 1.2rem 1.5rem; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.82rem; line-height: 1.9; color: var(--text); white-space: pre; tab-size: 4; max-height: 600px; }
+        .code-card pre.collapsed { display: none; }
 
         /* Checklist - FIXED */
         .checklist { list-style: none; padding: 0; }
         .checklist li { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(51,65,85,0.5); font-size: 0.9rem; color: var(--text-muted); }
         .checklist li:last-child { border-bottom: none; }
-        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; min-width: 18px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; margin-top: 2px; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; min-width: 18px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; margin-top: 2px; transition: all 0.2s; position: relative; flex-shrink: 0; }
         .checklist input[type="checkbox"]:checked { background: var(--green); border-color: var(--green); }
-        .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: -1px; left: 3px; color: white; font-size: 12px; font-weight: bold; }
+        .checklist input[type="checkbox"]:checked::after { content: '\2713'; position: absolute; top: -1px; left: 3px; color: white; font-size: 12px; font-weight: bold; }
         .checklist li.done { text-decoration: line-through; opacity: 0.6; }
+
+        /* Q&A Accordion (STAR section) */
+        .qa-item { margin-bottom: 0.75rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .qa-question { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 1.2rem; background: var(--surface); cursor: pointer; transition: all 0.2s; }
+        .qa-question:hover { background: var(--surface-hover); }
+        .qa-question .qa-icon { color: var(--accent); font-size: 0.8rem; transition: transform 0.3s; flex-shrink: 0; }
+        .qa-question.open .qa-icon { transform: rotate(90deg); }
+        .qa-question span { font-size: 0.9rem; font-weight: 500; }
+        .qa-answer { display: none; padding: 1.2rem; background: rgba(0,120,212,0.05); border-top: 1px solid var(--border); }
+        .qa-answer.open { display: block; animation: slideDown 0.3s ease; }
+        .qa-answer p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem; line-height: 1.8; }
+        .qa-answer strong { color: var(--primary); }
+        .qa-answer ul { list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0; }
+        .qa-answer li { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+        .qa-alt-questions { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+        .qa-alt-questions h5 { color: var(--purple); font-size: 0.8rem; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .qa-alt-questions li { font-size: 0.82rem; color: var(--text-muted); list-style: none; padding-left: 1rem; position: relative; }
+        .qa-alt-questions li::before { content: '\2192'; position: absolute; left: 0; color: var(--purple); }
 
         /* Tip Box */
         .tip-box { background: rgba(0,120,212,0.08); border: 1px solid rgba(0,120,212,0.25); border-radius: var(--radius); padding: 1.25rem; margin: 1.5rem 0; }
@@ -157,26 +176,33 @@
     <div class="progress-bar" id="progressBar"></div>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="nav-logo">📚 Interview Prep</a>
+            <a href="#" class="nav-logo">🚀 SRE/DevOps Bootcamp</a>
             <ul class="nav-menu">
                 <li><a href="#schedule" class="nav-link">14-Day Plan</a></li>
                 <li><a href="#coding" class="nav-link">Coding</a></li>
                 <li><a href="#infrastructure" class="nav-link">Infrastructure</a></li>
                 <li><a href="#system-design" class="nav-link">System Design</a></li>
                 <li><a href="#behavioral" class="nav-link">Behavioral</a></li>
+                <li><a href="#star-scenarios" class="nav-link">STAR(L)</a></li>
                 <li><a href="#tracker" class="nav-link">Tracker</a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- Scroll Buttons -->
+    <div class="scroll-buttons">
+        <button class="scroll-btn" id="scrollUp" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Page Up">&#9650;</button>
+        <button class="scroll-btn" id="scrollDown" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="Page Down">&#9660;</button>
+    </div>
+
     <!-- Hero -->
     <section class="hero">
-        <h1>Microsoft Interview Prep</h1>
-        <p>2-Week Intensive Study Plan — Python, C#, Terraform, YAML, Kubernetes, System Design & Behavioral</p>
+        <h1>Interview Prep Bootcamp for SRE/DevOps</h1>
+        <p>2-Week Intensive Study Plan — Python, C#, Terraform, Azure DevOps, Kubernetes, System Design & STAR(L) Behavioral</p>
         <div class="hero-stats">
             <div class="stat"><span class="stat-value">14</span><span class="stat-label">Days</span></div>
-            <div class="stat"><span class="stat-value">50+</span><span class="stat-label">Problems</span></div>
-            <div class="stat"><span class="stat-value">5</span><span class="stat-label">Domains</span></div>
+            <div class="stat"><span class="stat-value">60+</span><span class="stat-label">Problems</span></div>
+            <div class="stat"><span class="stat-value">6</span><span class="stat-label">Domains</span></div>
             <div class="stat"><span class="stat-value">2-3hr</span><span class="stat-label">Daily</span></div>
         </div>
         <div class="progress-summary">
@@ -184,7 +210,7 @@
         </div>
     </section>
 
-    <!-- 14-Day Schedule with Accordion -->
+    <!-- 14-Day Schedule -->
     <section class="section section-alt" id="schedule">
         <div class="container">
             <h2 class="section-title">2-Week Study Schedule</h2>
@@ -192,7 +218,6 @@
                 <h4>💡 Daily Routine</h4>
                 <p><strong>Morning (1 hr):</strong> 2-3 LeetCode problems (Python & C#) | <strong>Afternoon (1 hr):</strong> Infrastructure (Terraform/YAML/K8s) | <strong>Evening (30-60 min):</strong> System design or behavioral</p>
             </div>
-
             <div id="schedule-days"></div>
         </div>
     </section>
@@ -206,7 +231,6 @@
                     <button class="tab-btn active" data-tab="python">Python</button>
                     <button class="tab-btn" data-tab="csharp">C#</button>
                 </div>
-
                 <div class="tab-content active" id="python">
                     <div class="card-grid" id="python-cards"></div>
                 </div>
@@ -226,8 +250,8 @@
                     <button class="tab-btn active" data-tab="terraform">Terraform</button>
                     <button class="tab-btn" data-tab="yaml">YAML Pipelines</button>
                     <button class="tab-btn" data-tab="kubernetes">Kubernetes</button>
+                    <button class="tab-btn" data-tab="azuredevops">Azure DevOps</button>
                 </div>
-
                 <div class="tab-content active" id="terraform">
                     <div class="card-grid" id="terraform-cards"></div>
                 </div>
@@ -236,6 +260,9 @@
                 </div>
                 <div class="tab-content" id="kubernetes">
                     <div class="card-grid" id="kubernetes-cards"></div>
+                </div>
+                <div class="tab-content" id="azuredevops">
+                    <div class="card-grid" id="azuredevops-cards"></div>
                 </div>
             </div>
         </div>
@@ -252,17 +279,29 @@
     <!-- Behavioral Section -->
     <section class="section section-alt" id="behavioral">
         <div class="container">
-            <h2 class="section-title">Behavioral (STAR Method)</h2>
+            <h2 class="section-title">Behavioral — Leadership Principles</h2>
             <div class="card-grid" id="behavioral-cards"></div>
             <div class="tip-box">
-                <h4>💡 STAR Format</h4>
-                <p><strong>S</strong>ituation (2 sentences) → <strong>T</strong>ask (your responsibility) → <strong>A</strong>ction (what YOU did) → <strong>R</strong>esult (quantifiable). Keep under 2 minutes. Have 8-10 stories covering different themes.</p>
+                <h4>💡 STAR(L) Format</h4>
+                <p><strong>S</strong>ituation (2 sentences) → <strong>T</strong>ask (your responsibility) → <strong>A</strong>ction (what YOU did) → <strong>R</strong>esult (quantifiable) → <strong>L</strong>earning (what changed). Keep under 2 minutes. Have 8-10 stories covering different themes.</p>
             </div>
         </div>
     </section>
 
+    <!-- STAR(L) Scenario Q&A Section -->
+    <section class="section" id="star-scenarios">
+        <div class="container">
+            <h2 class="section-title">STAR(L) Scenario-Based Q&A</h2>
+            <div class="tip-box">
+                <h4>💡 How to Use</h4>
+                <p>Click any question to reveal the STAR(L) answer prompt and alternative questions that can be answered with the same story. Practice each answer aloud in under 2 minutes.</p>
+            </div>
+            <div id="star-qa-container"></div>
+        </div>
+    </section>
+
     <!-- Problem Tracker -->
-    <section class="section" id="tracker">
+    <section class="section section-alt" id="tracker">
         <div class="container">
             <h2 class="section-title">LeetCode Problem Tracker</h2>
             <div class="card" style="overflow-x:auto;">
@@ -272,7 +311,7 @@
     </section>
 
     <footer class="footer">
-        <p>📚 Microsoft Interview Prep — Rajesh Dammala | 2-Week Intensive | June 2026</p>
+        <p>🚀 Interview Prep Bootcamp for SRE/DevOps — Rajesh Dammala | 2-Week Intensive | June 2026</p>
         <p style="margin-top:0.5rem;font-size:0.75rem;">Progress is saved locally in your browser. Clear browser data to reset.</p>
     </footer>
 
@@ -348,7 +387,7 @@ const scheduleData = [
             { name: "Number of Islands", desc: "DFS/BFS from each '1'. Mark visited cells as '0'. Count connected components." },
             { name: "Word Ladder", desc: "BFS where each level changes one character. Use word set for O(1) lookup." },
             { name: "Course Schedule", desc: "Topological sort using BFS (Kahn's) or DFS with cycle detection via indegree." },
-            { name: "Clone Graph", desc: "BFS/DFS with a hash map of old→new node mappings to handle cycles." }
+            { name: "Clone Graph", desc: "BFS/DFS with a hash map of old-to-new node mappings to handle cycles." }
         ],
         resources: [
             { label: "Graph BFS/DFS - William Fiset", url: "https://www.youtube.com/watch?v=09_LlHjoEiY", type: "youtube" },
@@ -362,7 +401,7 @@ const scheduleData = [
         topics: [
             { name: "Climbing Stairs", desc: "dp[i] = dp[i-1] + dp[i-2]. Classic Fibonacci pattern. Can optimize to O(1) space." },
             { name: "Coin Change", desc: "dp[amount] = min coins needed. For each coin, dp[x] = min(dp[x], dp[x-coin]+1)." },
-            { name: "Longest Increasing Subsequence", desc: "O(n²) DP or O(n log n) with binary search on tails array." },
+            { name: "Longest Increasing Subsequence", desc: "O(n squared) DP or O(n log n) with binary search on tails array." },
             { name: "House Robber", desc: "dp[i] = max(dp[i-1], dp[i-2] + nums[i]). Can't rob adjacent houses." }
         ],
         resources: [
@@ -435,8 +474,8 @@ const scheduleData = [
         day: 11, title: "System Design Deep Dive", time: "3 hr",
         topics: [
             { name: "Design: Monitoring System", desc: "Metrics collection (push/pull), log aggregation, alert routing, dashboards, SLI/SLO." },
-            { name: "Design: Incident Pipeline", desc: "Detection → Triage → Mitigation → RCA → Follow-up. Severity levels, escalation." },
-            { name: "Design: CI/CD Pipeline", desc: "Source → Build → Test → Stage → Deploy. Strategies: blue-green, canary, rolling." }
+            { name: "Design: Incident Pipeline", desc: "Detection, Triage, Mitigation, RCA, Follow-up. Severity levels, escalation." },
+            { name: "Design: CI/CD Pipeline", desc: "Source, Build, Test, Stage, Deploy. Strategies: blue-green, canary, rolling." }
         ],
         resources: [
             { label: "Monitoring Design - Gaurav Sen", url: "https://www.youtube.com/watch?v=kIcq1_pBQSY", type: "youtube" },
@@ -458,7 +497,7 @@ const scheduleData = [
             { label: "K8s Troubleshooting Guide", url: "https://kubernetes.io/docs/tasks/debug/", type: "link" },
             { label: "K8s Debugging Pods", url: "https://www.youtube.com/watch?v=K4FUj2S2Sms", type: "youtube" }
         ],
-        infra: "Full K8s workflow: Write Deployment → Service → Ingress → HPA. Debug with kubectl commands."
+        infra: "Full K8s workflow: Write Deployment, Service, Ingress, HPA. Debug with kubectl commands."
     },
     {
         day: 13, title: "Mock Interview Day", time: "3 hr",
@@ -486,809 +525,61 @@ const scheduleData = [
         resources: [
             { label: "14 Patterns to Ace Coding", url: "https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6ed", type: "link" },
             { label: "Interview Day Tips", url: "https://www.youtube.com/watch?v=0Z9RW_hhUT4", type: "youtube" },
-            { label: "Microsoft Interview Tips", url: "https://careers.microsoft.com/v2/global/en/interviewtips", type: "link" }
+            { label: "Interview Tips", url: "https://careers.microsoft.com/v2/global/en/interviewtips", type: "link" }
         ],
         infra: "Review all infra notes. Be ready to explain Terraform state, K8s probes, YAML pipeline stages clearly."
     }
 ];
 
 // ============================================================
-// DATA: Coding Problems
+// DATA: Coding Problems (same as before)
 // ============================================================
 const pythonProblems = [
-    { title: "Two Sum — Hash Map O(n)", code: `# Two Sum
-# Given an array and target, find two indices that sum to target.
-# Approach: Store seen numbers in dict. Check if complement exists.
-
-def two_sum(nums, target):
-    seen = {}  # value -> index
-    for i, num in enumerate(nums):
-        complement = target - num
-        if complement in seen:
-            return [seen[complement], i]
-        seen[num] = i
-    return []
-
-# Example: two_sum([2, 7, 11, 15], 9) → [0, 1]
-# Time: O(n) | Space: O(n)` },
-    { title: "Sliding Window Maximum — Deque O(n)", code: `# Sliding Window Maximum
-# Find max in each window of size k as it slides across array.
-# Approach: Deque stores indices of useful elements (decreasing order).
-
-from collections import deque
-
-def max_sliding_window(nums, k):
-    dq = deque()  # stores indices
-    result = []
-    
-    for i, num in enumerate(nums):
-        # Remove elements smaller than current (they'll never be max)
-        while dq and nums[dq[-1]] <= num:
-            dq.pop()
-        
-        dq.append(i)
-        
-        # Remove elements outside window
-        if dq[0] <= i - k:
-            dq.popleft()
-        
-        # Window is fully formed starting at index k-1
-        if i >= k - 1:
-            result.append(nums[dq[0]])
-    
-    return result
-
-# Example: max_sliding_window([1,3,-1,-3,5,3,6,7], 3) → [3,3,5,5,6,7]
-# Time: O(n) | Space: O(k)` },
-    { title: "Reverse Linked List — Iterative O(n)", code: `# Reverse a singly linked list in-place.
-# Approach: Maintain three pointers: prev, curr, next.
-# At each step, reverse curr's pointer, then advance all three.
-
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-def reverse_list(head):
-    prev = None
-    curr = head
-    
-    while curr:
-        next_node = curr.next   # Save next
-        curr.next = prev        # Reverse pointer
-        prev = curr             # Advance prev
-        curr = next_node        # Advance curr
-    
-    return prev  # prev is now the new head
-
-# Example: 1→2→3→4→5 becomes 5→4→3→2→1
-# Time: O(n) | Space: O(1)` },
-    { title: "LRU Cache — OrderedDict O(1)", code: `# Design a Least Recently Used cache with O(1) get and put.
-# Approach: OrderedDict maintains insertion order.
-# On access, move to end. On overflow, remove from front (oldest).
-
-from collections import OrderedDict
-
-class LRUCache:
-    def __init__(self, capacity: int):
-        self.cache = OrderedDict()
-        self.cap = capacity
-    
-    def get(self, key: int) -> int:
-        if key not in self.cache:
-            return -1
-        # Move to end (most recently used)
-        self.cache.move_to_end(key)
-        return self.cache[key]
-    
-    def put(self, key: int, value: int) -> None:
-        if key in self.cache:
-            self.cache.move_to_end(key)
-        self.cache[key] = value
-        # Evict oldest if over capacity
-        if len(self.cache) > self.cap:
-            self.cache.popitem(last=False)
-
-# Usage:
-# cache = LRUCache(2)
-# cache.put(1, 1); cache.put(2, 2)
-# cache.get(1)    → 1 (moves key 1 to end)
-# cache.put(3, 3) → evicts key 2
-# Time: O(1) for both get and put` },
-    { title: "Level Order Traversal — BFS O(n)", code: `# Binary Tree Level Order Traversal
-# Return values grouped by level: [[3], [9, 20], [15, 7]]
-# Approach: BFS with queue. Process one level at a time.
-
-from collections import deque
-
-def level_order(root):
-    if not root:
-        return []
-    
-    result = []
-    queue = deque([root])
-    
-    while queue:
-        level = []
-        level_size = len(queue)  # Nodes at this level
-        
-        for _ in range(level_size):
-            node = queue.popleft()
-            level.append(node.val)
-            
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
-        
-        result.append(level)
-    
-    return result
-
-# Time: O(n) | Space: O(n)` },
-    { title: "Coin Change — Dynamic Programming O(n*m)", code: `# Find minimum coins needed to make 'amount'.
-# Approach: Bottom-up DP. dp[x] = min coins for amount x.
-# For each amount, try each coin and take minimum.
-
-def coin_change(coins, amount):
-    # dp[i] = min coins to make amount i
-    dp = [float('inf')] * (amount + 1)
-    dp[0] = 0  # Base case: 0 coins for amount 0
-    
-    for coin in coins:
-        for x in range(coin, amount + 1):
-            # Either don't use this coin (dp[x])
-            # Or use it (dp[x - coin] + 1)
-            dp[x] = min(dp[x], dp[x - coin] + 1)
-    
-    return dp[amount] if dp[amount] != float('inf') else -1
-
-# Example: coin_change([1, 5, 10, 25], 30) → 2 (25 + 5)
-# Time: O(amount * len(coins)) | Space: O(amount)` },
-    { title: "Number of Islands — DFS O(m*n)", code: `# Count connected components of '1's in a grid.
-# Approach: For each unvisited '1', run DFS to mark all
-# connected '1's as visited. Each DFS = one island.
-
-def num_islands(grid):
-    if not grid:
-        return 0
-    
-    rows, cols = len(grid), len(grid[0])
-    count = 0
-    
-    def dfs(r, c):
-        # Out of bounds or water → stop
-        if (r < 0 or r >= rows or
-            c < 0 or c >= cols or
-            grid[r][c] != '1'):
-            return
-        
-        grid[r][c] = '0'  # Mark visited
-        
-        # Explore all 4 directions
-        dfs(r + 1, c)
-        dfs(r - 1, c)
-        dfs(r, c + 1)
-        dfs(r, c - 1)
-    
-    for r in range(rows):
-        for c in range(cols):
-            if grid[r][c] == '1':
-                dfs(r, c)
-                count += 1
-    
-    return count
-
-# Time: O(m * n) | Space: O(m * n) recursion stack` },
-    { title: "Course Schedule — Topological Sort O(V+E)", code: `# Can you finish all courses given prerequisites?
-# Approach: Topological sort using BFS (Kahn's algorithm).
-# Build graph + indegree. Start with 0-indegree nodes.
-
-from collections import deque
-
-def can_finish(num_courses, prerequisites):
-    # Build adjacency list and indegree count
-    graph = [[] for _ in range(num_courses)]
-    indegree = [0] * num_courses
-    
-    for course, prereq in prerequisites:
-        graph[prereq].append(course)
-        indegree[course] += 1
-    
-    # Start with courses that have no prerequisites
-    queue = deque(
-        i for i in range(num_courses) if indegree[i] == 0
-    )
-    
-    completed = 0
-    while queue:
-        node = queue.popleft()
-        completed += 1
-        
-        for neighbor in graph[node]:
-            indegree[neighbor] -= 1
-            if indegree[neighbor] == 0:
-                queue.append(neighbor)
-    
-    # If we completed all courses, no cycle exists
-    return completed == num_courses
-
-# Example: can_finish(4, [[1,0],[2,1],[3,2]]) → True
-# Time: O(V + E) | Space: O(V + E)` }
+    { title: "Two Sum \u2014 Hash Map O(n)", code: "# Two Sum\n# Given an array and target, find two indices that sum to target.\n# Approach: Store seen numbers in dict. Check if complement exists.\n\ndef two_sum(nums, target):\n    seen = {}  # value -> index\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in seen:\n            return [seen[complement], i]\n        seen[num] = i\n    return []\n\n# Example: two_sum([2, 7, 11, 15], 9) \u2192 [0, 1]\n# Time: O(n) | Space: O(n)" },
+    { title: "Sliding Window Maximum \u2014 Deque O(n)", code: "# Sliding Window Maximum\n# Find max in each window of size k as it slides across array.\n# Approach: Deque stores indices of useful elements (decreasing order).\n\nfrom collections import deque\n\ndef max_sliding_window(nums, k):\n    dq = deque()  # stores indices\n    result = []\n    \n    for i, num in enumerate(nums):\n        # Remove elements smaller than current (they'll never be max)\n        while dq and nums[dq[-1]] <= num:\n            dq.pop()\n        \n        dq.append(i)\n        \n        # Remove elements outside window\n        if dq[0] <= i - k:\n            dq.popleft()\n        \n        # Window is fully formed starting at index k-1\n        if i >= k - 1:\n            result.append(nums[dq[0]])\n    \n    return result\n\n# Example: max_sliding_window([1,3,-1,-3,5,3,6,7], 3) \u2192 [3,3,5,5,6,7]\n# Time: O(n) | Space: O(k)" },
+    { title: "Reverse Linked List \u2014 Iterative O(n)", code: "# Reverse a singly linked list in-place.\n# Approach: Maintain three pointers: prev, curr, next.\n# At each step, reverse curr's pointer, then advance all three.\n\nclass ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\ndef reverse_list(head):\n    prev = None\n    curr = head\n    \n    while curr:\n        next_node = curr.next   # Save next\n        curr.next = prev        # Reverse pointer\n        prev = curr             # Advance prev\n        curr = next_node        # Advance curr\n    \n    return prev  # prev is now the new head\n\n# Example: 1\u21922\u21923\u21924\u21925 becomes 5\u21924\u21923\u21922\u21921\n# Time: O(n) | Space: O(1)" },
+    { title: "LRU Cache \u2014 OrderedDict O(1)", code: "# Design a Least Recently Used cache with O(1) get and put.\n# Approach: OrderedDict maintains insertion order.\n# On access, move to end. On overflow, remove from front (oldest).\n\nfrom collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.cache = OrderedDict()\n        self.cap = capacity\n    \n    def get(self, key: int) -> int:\n        if key not in self.cache:\n            return -1\n        # Move to end (most recently used)\n        self.cache.move_to_end(key)\n        return self.cache[key]\n    \n    def put(self, key: int, value: int) -> None:\n        if key in self.cache:\n            self.cache.move_to_end(key)\n        self.cache[key] = value\n        # Evict oldest if over capacity\n        if len(self.cache) > self.cap:\n            self.cache.popitem(last=False)\n\n# Usage:\n# cache = LRUCache(2)\n# cache.put(1, 1); cache.put(2, 2)\n# cache.get(1)    \u2192 1 (moves key 1 to end)\n# cache.put(3, 3) \u2192 evicts key 2\n# Time: O(1) for both get and put" },
+    { title: "Level Order Traversal \u2014 BFS O(n)", code: "# Binary Tree Level Order Traversal\n# Return values grouped by level: [[3], [9, 20], [15, 7]]\n# Approach: BFS with queue. Process one level at a time.\n\nfrom collections import deque\n\ndef level_order(root):\n    if not root:\n        return []\n    \n    result = []\n    queue = deque([root])\n    \n    while queue:\n        level = []\n        level_size = len(queue)  # Nodes at this level\n        \n        for _ in range(level_size):\n            node = queue.popleft()\n            level.append(node.val)\n            \n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        \n        result.append(level)\n    \n    return result\n\n# Time: O(n) | Space: O(n)" },
+    { title: "Coin Change \u2014 Dynamic Programming O(n*m)", code: "# Find minimum coins needed to make 'amount'.\n# Approach: Bottom-up DP. dp[x] = min coins for amount x.\n# For each amount, try each coin and take minimum.\n\ndef coin_change(coins, amount):\n    # dp[i] = min coins to make amount i\n    dp = [float('inf')] * (amount + 1)\n    dp[0] = 0  # Base case: 0 coins for amount 0\n    \n    for coin in coins:\n        for x in range(coin, amount + 1):\n            dp[x] = min(dp[x], dp[x - coin] + 1)\n    \n    return dp[amount] if dp[amount] != float('inf') else -1\n\n# Example: coin_change([1, 5, 10, 25], 30) \u2192 2 (25 + 5)\n# Time: O(amount * len(coins)) | Space: O(amount)" },
+    { title: "Number of Islands \u2014 DFS O(m*n)", code: "# Count connected components of '1's in a grid.\n# Approach: For each unvisited '1', run DFS to mark all\n# connected '1's as visited. Each DFS = one island.\n\ndef num_islands(grid):\n    if not grid:\n        return 0\n    \n    rows, cols = len(grid), len(grid[0])\n    count = 0\n    \n    def dfs(r, c):\n        if (r < 0 or r >= rows or\n            c < 0 or c >= cols or\n            grid[r][c] != '1'):\n            return\n        \n        grid[r][c] = '0'  # Mark visited\n        dfs(r + 1, c)\n        dfs(r - 1, c)\n        dfs(r, c + 1)\n        dfs(r, c - 1)\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == '1':\n                dfs(r, c)\n                count += 1\n    \n    return count\n\n# Time: O(m * n) | Space: O(m * n) recursion stack" },
+    { title: "Course Schedule \u2014 Topological Sort O(V+E)", code: "# Can you finish all courses given prerequisites?\n# Approach: Topological sort using BFS (Kahn's algorithm).\n# Build graph + indegree. Start with 0-indegree nodes.\n\nfrom collections import deque\n\ndef can_finish(num_courses, prerequisites):\n    graph = [[] for _ in range(num_courses)]\n    indegree = [0] * num_courses\n    \n    for course, prereq in prerequisites:\n        graph[prereq].append(course)\n        indegree[course] += 1\n    \n    queue = deque(\n        i for i in range(num_courses) if indegree[i] == 0\n    )\n    \n    completed = 0\n    while queue:\n        node = queue.popleft()\n        completed += 1\n        \n        for neighbor in graph[node]:\n            indegree[neighbor] -= 1\n            if indegree[neighbor] == 0:\n                queue.append(neighbor)\n    \n    return completed == num_courses\n\n# Example: can_finish(4, [[1,0],[2,1],[3,2]]) \u2192 True\n# Time: O(V + E) | Space: O(V + E)" }
 ];
 
 const csharpProblems = [
-    { title: "Two Sum — Dictionary O(n)", code: `// Two Sum - Find indices of two numbers that sum to target.
-// Approach: Dictionary stores value→index. Check complement exists.
-
-public int[] TwoSum(int[] nums, int target) {
-    var map = new Dictionary<int, int>();
-    
-    for (int i = 0; i < nums.Length; i++) {
-        int complement = target - nums[i];
-        
-        if (map.ContainsKey(complement))
-            return new int[] { map[complement], i };
-        
-        map[nums[i]] = i;
-    }
-    
-    return new int[0];
-}
-
-// Example: TwoSum([2, 7, 11, 15], 9) → [0, 1]
-// Time: O(n) | Space: O(n)` },
-    { title: "Valid Parentheses — Stack O(n)", code: `// Check if brackets are properly matched and nested.
-// Approach: Push open brackets. On close, check stack top matches.
-
-public bool IsValid(string s) {
-    var stack = new Stack<char>();
-    var pairs = new Dictionary<char, char> {
-        { ')', '(' },
-        { '}', '{' },
-        { ']', '[' }
-    };
-    
-    foreach (char c in s) {
-        if (pairs.ContainsKey(c)) {
-            // It's a closing bracket
-            if (stack.Count == 0 || stack.Pop() != pairs[c])
-                return false;
-        } else {
-            // It's an opening bracket
-            stack.Push(c);
-        }
-    }
-    
-    return stack.Count == 0;
-}
-
-// Example: IsValid("({[]})") → true
-// Time: O(n) | Space: O(n)` },
-    { title: "Reverse Linked List — Iterative O(n)", code: `// Reverse a singly linked list in-place.
-// Maintain prev, curr, next pointers. Reverse one link at a time.
-
-public ListNode ReverseList(ListNode head) {
-    ListNode prev = null;
-    ListNode curr = head;
-    
-    while (curr != null) {
-        ListNode next = curr.next;  // Save next
-        curr.next = prev;           // Reverse link
-        prev = curr;                // Advance prev
-        curr = next;                // Advance curr
-    }
-    
-    return prev;  // New head
-}
-
-// Example: 1→2→3→4→5 becomes 5→4→3→2→1
-// Time: O(n) | Space: O(1)` },
-    { title: "LRU Cache — LinkedList + Dictionary O(1)", code: `// O(1) get and put using LinkedList for order, Dictionary for lookup.
-
-public class LRUCache {
-    private int _capacity;
-    private LinkedList<(int key, int val)> _list = new();
-    private Dictionary<int, LinkedListNode<(int key, int val)>> _map = new();
-
-    public LRUCache(int capacity) {
-        _capacity = capacity;
-    }
-
-    public int Get(int key) {
-        if (!_map.ContainsKey(key)) return -1;
-        
-        var node = _map[key];
-        _list.Remove(node);         // Remove from current position
-        _list.AddFirst(node);       // Move to front (most recent)
-        return node.Value.val;
-    }
-
-    public void Put(int key, int value) {
-        if (_map.ContainsKey(key)) {
-            _list.Remove(_map[key]);
-            _map.Remove(key);
-        }
-        
-        if (_list.Count >= _capacity) {
-            // Evict least recently used (last item)
-            _map.Remove(_list.Last.Value.key);
-            _list.RemoveLast();
-        }
-        
-        var node = _list.AddFirst((key, value));
-        _map[key] = node;
-    }
-}
-
-// Time: O(1) for both Get and Put` },
-    { title: "Level Order Traversal — BFS O(n)", code: `// Binary Tree Level Order Traversal using Queue.
-// Process one full level per iteration.
-
-public IList<IList<int>> LevelOrder(TreeNode root) {
-    var result = new List<IList<int>>();
-    if (root == null) return result;
-    
-    var queue = new Queue<TreeNode>();
-    queue.Enqueue(root);
-    
-    while (queue.Count > 0) {
-        var level = new List<int>();
-        int levelSize = queue.Count;
-        
-        for (int i = 0; i < levelSize; i++) {
-            var node = queue.Dequeue();
-            level.Add(node.val);
-            
-            if (node.left != null)
-                queue.Enqueue(node.left);
-            if (node.right != null)
-                queue.Enqueue(node.right);
-        }
-        
-        result.Add(level);
-    }
-    
-    return result;
-}
-
-// Time: O(n) | Space: O(n)` },
-    { title: "Coin Change — DP O(amount * coins)", code: `// Find minimum coins to make amount. Return -1 if impossible.
-// dp[i] = minimum coins needed to make amount i.
-
-public int CoinChange(int[] coins, int amount) {
-    int[] dp = new int[amount + 1];
-    Array.Fill(dp, amount + 1);  // Fill with "impossible" value
-    dp[0] = 0;  // Base case
-    
-    for (int i = 1; i <= amount; i++) {
-        foreach (int coin in coins) {
-            if (coin <= i) {
-                dp[i] = Math.Min(dp[i], dp[i - coin] + 1);
-            }
-        }
-    }
-    
-    return dp[amount] > amount ? -1 : dp[amount];
-}
-
-// Example: CoinChange([1, 5, 10, 25], 30) → 2
-// Time: O(amount * coins.Length) | Space: O(amount)` },
-    { title: "Number of Islands — BFS O(m*n)", code: `// Count connected '1' components in a char grid.
-// BFS from each unvisited '1', marking all connected cells.
-
-public int NumIslands(char[][] grid) {
-    int count = 0;
-    int rows = grid.Length, cols = grid[0].Length;
-    int[][] dirs = { new[]{1,0}, new[]{-1,0}, new[]{0,1}, new[]{0,-1} };
-    
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            if (grid[r][c] == '1') {
-                count++;
-                // BFS to mark entire island
-                var queue = new Queue<(int, int)>();
-                queue.Enqueue((r, c));
-                grid[r][c] = '0';
-                
-                while (queue.Count > 0) {
-                    var (row, col) = queue.Dequeue();
-                    foreach (var d in dirs) {
-                        int nr = row + d[0], nc = col + d[1];
-                        if (nr >= 0 && nr < rows &&
-                            nc >= 0 && nc < cols &&
-                            grid[nr][nc] == '1') {
-                            grid[nr][nc] = '0';
-                            queue.Enqueue((nr, nc));
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return count;
-}
-
-// Time: O(m * n) | Space: O(min(m, n)) for BFS queue` },
-    { title: "Merge Intervals — Sort + Merge O(n log n)", code: `// Merge all overlapping intervals.
-// Sort by start, then merge consecutive overlapping ones.
-
-public int[][] Merge(int[][] intervals) {
-    // Sort by start time
-    Array.Sort(intervals, (a, b) => a[0] - b[0]);
-    
-    var result = new List<int[]>();
-    
-    foreach (var interval in intervals) {
-        // If result is empty OR no overlap with last
-        if (result.Count == 0 || result[^1][1] < interval[0]) {
-            result.Add(interval);
-        } else {
-            // Merge: extend end of last interval
-            result[^1][1] = Math.Max(result[^1][1], interval[1]);
-        }
-    }
-    
-    return result.ToArray();
-}
-
-// Example: Merge([[1,3],[2,6],[8,10],[15,18]])
-//        → [[1,6],[8,10],[15,18]]
-// Time: O(n log n) | Space: O(n)` }
+    { title: "Two Sum \u2014 Dictionary O(n)", code: "// Two Sum - Find indices of two numbers that sum to target.\n// Approach: Dictionary stores value\u2192index. Check complement exists.\n\npublic int[] TwoSum(int[] nums, int target) {\n    var map = new Dictionary<int, int>();\n    \n    for (int i = 0; i < nums.Length; i++) {\n        int complement = target - nums[i];\n        \n        if (map.ContainsKey(complement))\n            return new int[] { map[complement], i };\n        \n        map[nums[i]] = i;\n    }\n    \n    return new int[0];\n}\n\n// Example: TwoSum([2, 7, 11, 15], 9) \u2192 [0, 1]\n// Time: O(n) | Space: O(n)" },
+    { title: "Valid Parentheses \u2014 Stack O(n)", code: "// Check if brackets are properly matched and nested.\n// Approach: Push open brackets. On close, check stack top matches.\n\npublic bool IsValid(string s) {\n    var stack = new Stack<char>();\n    var pairs = new Dictionary<char, char> {\n        { ')', '(' },\n        { '}', '{' },\n        { ']', '[' }\n    };\n    \n    foreach (char c in s) {\n        if (pairs.ContainsKey(c)) {\n            if (stack.Count == 0 || stack.Pop() != pairs[c])\n                return false;\n        } else {\n            stack.Push(c);\n        }\n    }\n    \n    return stack.Count == 0;\n}\n\n// Example: IsValid(\"({[]})\") \u2192 true\n// Time: O(n) | Space: O(n)" },
+    { title: "Reverse Linked List \u2014 Iterative O(n)", code: "// Reverse a singly linked list in-place.\n// Maintain prev, curr, next pointers. Reverse one link at a time.\n\npublic ListNode ReverseList(ListNode head) {\n    ListNode prev = null;\n    ListNode curr = head;\n    \n    while (curr != null) {\n        ListNode next = curr.next;  // Save next\n        curr.next = prev;           // Reverse link\n        prev = curr;                // Advance prev\n        curr = next;                // Advance curr\n    }\n    \n    return prev;  // New head\n}\n\n// Example: 1\u21922\u21923\u21924\u21925 becomes 5\u21924\u21923\u21922\u21921\n// Time: O(n) | Space: O(1)" },
+    { title: "LRU Cache \u2014 LinkedList + Dictionary O(1)", code: "// O(1) get and put using LinkedList for order, Dictionary for lookup.\n\npublic class LRUCache {\n    private int _capacity;\n    private LinkedList<(int key, int val)> _list = new();\n    private Dictionary<int, LinkedListNode<(int key, int val)>> _map = new();\n\n    public LRUCache(int capacity) {\n        _capacity = capacity;\n    }\n\n    public int Get(int key) {\n        if (!_map.ContainsKey(key)) return -1;\n        var node = _map[key];\n        _list.Remove(node);\n        _list.AddFirst(node);\n        return node.Value.val;\n    }\n\n    public void Put(int key, int value) {\n        if (_map.ContainsKey(key)) {\n            _list.Remove(_map[key]);\n            _map.Remove(key);\n        }\n        if (_list.Count >= _capacity) {\n            _map.Remove(_list.Last.Value.key);\n            _list.RemoveLast();\n        }\n        var node = _list.AddFirst((key, value));\n        _map[key] = node;\n    }\n}\n\n// Time: O(1) for both Get and Put" },
+    { title: "Coin Change \u2014 DP O(amount * coins)", code: "// Find minimum coins to make amount. Return -1 if impossible.\n// dp[i] = minimum coins needed to make amount i.\n\npublic int CoinChange(int[] coins, int amount) {\n    int[] dp = new int[amount + 1];\n    Array.Fill(dp, amount + 1);\n    dp[0] = 0;\n    \n    for (int i = 1; i <= amount; i++) {\n        foreach (int coin in coins) {\n            if (coin <= i) {\n                dp[i] = Math.Min(dp[i], dp[i - coin] + 1);\n            }\n        }\n    }\n    \n    return dp[amount] > amount ? -1 : dp[amount];\n}\n\n// Example: CoinChange([1, 5, 10, 25], 30) \u2192 2\n// Time: O(amount * coins.Length) | Space: O(amount)" },
+    { title: "Number of Islands \u2014 BFS O(m*n)", code: "// Count connected '1' components in a char grid.\n// BFS from each unvisited '1', marking all connected cells.\n\npublic int NumIslands(char[][] grid) {\n    int count = 0;\n    int rows = grid.Length, cols = grid[0].Length;\n    int[][] dirs = { new[]{1,0}, new[]{-1,0}, new[]{0,1}, new[]{0,-1} };\n    \n    for (int r = 0; r < rows; r++) {\n        for (int c = 0; c < cols; c++) {\n            if (grid[r][c] == '1') {\n                count++;\n                var queue = new Queue<(int, int)>();\n                queue.Enqueue((r, c));\n                grid[r][c] = '0';\n                \n                while (queue.Count > 0) {\n                    var (row, col) = queue.Dequeue();\n                    foreach (var d in dirs) {\n                        int nr = row + d[0], nc = col + d[1];\n                        if (nr >= 0 && nr < rows &&\n                            nc >= 0 && nc < cols &&\n                            grid[nr][nc] == '1') {\n                            grid[nr][nc] = '0';\n                            queue.Enqueue((nr, nc));\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return count;\n}\n\n// Time: O(m * n) | Space: O(min(m, n))" },
+    { title: "Merge Intervals \u2014 Sort + Merge O(n log n)", code: "// Merge all overlapping intervals.\n// Sort by start, then merge consecutive overlapping ones.\n\npublic int[][] Merge(int[][] intervals) {\n    Array.Sort(intervals, (a, b) => a[0] - b[0]);\n    var result = new List<int[]>();\n    \n    foreach (var interval in intervals) {\n        if (result.Count == 0 || result[^1][1] < interval[0]) {\n            result.Add(interval);\n        } else {\n            result[^1][1] = Math.Max(result[^1][1], interval[1]);\n        }\n    }\n    \n    return result.ToArray();\n}\n\n// Example: Merge([[1,3],[2,6],[8,10],[15,18]])\n//        \u2192 [[1,6],[8,10],[15,18]]\n// Time: O(n log n) | Space: O(n)" }
 ];
 
+// ============================================================
+// DATA: Infrastructure Cards
+// ============================================================
 const terraformCards = [
-    { title: "Azure Provider + Resource Group", code: `# Configure Azure provider with remote state backend
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.0"
-    }
-  }
-  
-  # Store state remotely in Azure Storage
-  backend "azurerm" {
-    resource_group_name  = "tf-state-rg"
-    storage_account_name = "tfstateprod"
-    container_name       = "tfstate"
-    key                  = "prod.terraform.tfstate"
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
-# Create a Resource Group
-resource "azurerm_resource_group" "main" {
-  name     = var.resource_group_name
-  location = var.location
-  
-  tags = {
-    Environment = var.environment
-    ManagedBy   = "Terraform"
-    Team        = "SRE"
-  }
-}
-
-# Create a Virtual Network
-resource "azurerm_virtual_network" "main" {
-  name                = "\${var.prefix}-vnet"
-  address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-}` },
-    { title: "Variables, Outputs & Modules", code: `# variables.tf — Define input parameters
-variable "resource_group_name" {
-  type        = string
-  description = "Name of the Azure resource group"
-}
-
-variable "location" {
-  type    = string
-  default = "eastus2"
-}
-
-variable "environment" {
-  type    = string
-  default = "production"
-  
-  validation {
-    condition     = contains(["dev", "staging", "production"], var.environment)
-    error_message = "Must be dev, staging, or production."
-  }
-}
-
-variable "tags" {
-  type    = map(string)
-  default = {}
-}
-
-# outputs.tf — Expose values for other modules/state
-output "resource_group_id" {
-  value       = azurerm_resource_group.main.id
-  description = "The ID of the resource group"
-}
-
-# Using a module (reusable infrastructure component)
-module "aks_cluster" {
-  source              = "./modules/aks"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = var.location
-  node_count          = 3
-  vm_size             = "Standard_D4s_v3"
-  
-  tags = merge(var.tags, { Component = "AKS" })
-}
-
-# Reference module output
-output "aks_endpoint" {
-  value = module.aks_cluster.kube_config_host
-}` },
-    { title: "AKS Cluster with Node Pool", code: `# Deploy Azure Kubernetes Service (AKS) cluster
-resource "azurerm_kubernetes_cluster" "main" {
-  name                = "\${var.prefix}-aks"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  dns_prefix          = var.prefix
-  kubernetes_version  = "1.28"
-  
-  default_node_pool {
-    name                = "system"
-    node_count          = 3
-    vm_size             = "Standard_D4s_v3"
-    os_disk_size_gb     = 50
-    max_pods            = 110
-    enable_auto_scaling = true
-    min_count           = 2
-    max_count           = 5
-    
-    zones = ["1", "2", "3"]
-  }
-  
-  identity {
-    type = "SystemAssigned"
-  }
-  
-  network_profile {
-    network_plugin    = "azure"
-    load_balancer_sku = "standard"
-    network_policy    = "calico"
-  }
-  
-  oms_agent {
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
-  }
-  
-  tags = var.tags
-}
-
-# Terraform lifecycle commands:
-# terraform init    → Download providers, init backend
-# terraform plan    → Preview changes (dry run)
-# terraform apply   → Apply changes to infrastructure
-# terraform destroy → Remove all managed resources` },
+    { title: "Azure Provider + Resource Group", code: "# Configure Azure provider with remote state backend\nterraform {\n  required_providers {\n    azurerm = {\n      source  = \"hashicorp/azurerm\"\n      version = \"~> 3.0\"\n    }\n  }\n  \n  backend \"azurerm\" {\n    resource_group_name  = \"tf-state-rg\"\n    storage_account_name = \"tfstateprod\"\n    container_name       = \"tfstate\"\n    key                  = \"prod.terraform.tfstate\"\n  }\n}\n\nprovider \"azurerm\" {\n  features {}\n}\n\nresource \"azurerm_resource_group\" \"main\" {\n  name     = var.resource_group_name\n  location = var.location\n  \n  tags = {\n    Environment = var.environment\n    ManagedBy   = \"Terraform\"\n    Team        = \"SRE\"\n  }\n}\n\nresource \"azurerm_virtual_network\" \"main\" {\n  name                = \"${var.prefix}-vnet\"\n  address_space       = [\"10.0.0.0/16\"]\n  location            = azurerm_resource_group.main.location\n  resource_group_name = azurerm_resource_group.main.name\n}" },
+    { title: "Variables, Outputs & Modules", code: "# variables.tf\nvariable \"resource_group_name\" {\n  type        = string\n  description = \"Name of the Azure resource group\"\n}\n\nvariable \"location\" {\n  type    = string\n  default = \"eastus2\"\n}\n\nvariable \"environment\" {\n  type    = string\n  default = \"production\"\n  \n  validation {\n    condition     = contains([\"dev\", \"staging\", \"production\"], var.environment)\n    error_message = \"Must be dev, staging, or production.\"\n  }\n}\n\n# outputs.tf\noutput \"resource_group_id\" {\n  value       = azurerm_resource_group.main.id\n  description = \"The ID of the resource group\"\n}\n\n# Using a module\nmodule \"aks_cluster\" {\n  source              = \"./modules/aks\"\n  resource_group_name = azurerm_resource_group.main.name\n  location            = var.location\n  node_count          = 3\n  vm_size             = \"Standard_D4s_v3\"\n  tags = merge(var.tags, { Component = \"AKS\" })\n}\n\noutput \"aks_endpoint\" {\n  value = module.aks_cluster.kube_config_host\n}" },
+    { title: "AKS Cluster with Node Pool", code: "resource \"azurerm_kubernetes_cluster\" \"main\" {\n  name                = \"${var.prefix}-aks\"\n  location            = azurerm_resource_group.main.location\n  resource_group_name = azurerm_resource_group.main.name\n  dns_prefix          = var.prefix\n  kubernetes_version  = \"1.28\"\n  \n  default_node_pool {\n    name                = \"system\"\n    node_count          = 3\n    vm_size             = \"Standard_D4s_v3\"\n    enable_auto_scaling = true\n    min_count           = 2\n    max_count           = 5\n    zones = [\"1\", \"2\", \"3\"]\n  }\n  \n  identity {\n    type = \"SystemAssigned\"\n  }\n  \n  network_profile {\n    network_plugin    = \"azure\"\n    load_balancer_sku = \"standard\"\n    network_policy    = \"calico\"\n  }\n  \n  oms_agent {\n    log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id\n  }\n  \n  tags = var.tags\n}\n\n# terraform init    \u2192 Download providers, init backend\n# terraform plan    \u2192 Preview changes (dry run)\n# terraform apply   \u2192 Apply changes to infrastructure\n# terraform destroy \u2192 Remove all managed resources" },
     { title: "Interview Questions & Key Concepts", isChecklist: true, items: [
         "What is Terraform state? Why is remote state important?",
         "How do you handle secrets? (Key Vault references, env vars, never in state)",
-        "Explain 'terraform plan' vs 'terraform apply' — what's a plan file?",
-        "How do you manage multiple environments? (Workspaces vs separate state files)",
-        "What happens when state drifts from actual infra? (terraform refresh/import)",
-        "count vs for_each — when to use each?",
+        "Explain 'terraform plan' vs 'terraform apply' \u2014 what's a plan file?",
+        "How do you manage multiple environments? (Workspaces vs separate state)",
+        "What happens when state drifts? (terraform refresh/import)",
+        "count vs for_each \u2014 when to use each?",
         "How do modules promote DRY principles? Module versioning?",
-        "What is state locking? Why is it critical in team environments?",
+        "What is state locking? Why critical in team environments?",
         "How do you import existing resources into Terraform?",
         "Explain depends_on vs implicit dependencies"
     ]}
 ];
 
 const yamlCards = [
-    { title: "Azure DevOps — Multi-Stage YAML Pipeline", code: `# azure-pipelines.yml
-# Full CI/CD pipeline with Build, Test, and Deploy stages
-
-trigger:
-  branches:
-    include:
-      - main
-      - release/*
-  paths:
-    exclude:
-      - '**/*.md'
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  buildConfiguration: 'Release'
-  dotnetVersion: '8.0.x'
-  isMain: \$[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-
-stages:
-# ─── BUILD & TEST ───────────────────────────
-- stage: Build
-  displayName: 'Build & Test'
-  jobs:
-  - job: BuildApp
-    displayName: 'Build Application'
-    steps:
-    - task: UseDotNet@2
-      displayName: 'Install .NET SDK'
-      inputs:
-        version: \$(dotnetVersion)
-    
-    - script: dotnet restore
-      displayName: 'Restore NuGet packages'
-    
-    - script: dotnet build --configuration \$(buildConfiguration) --no-restore
-      displayName: 'Build solution'
-    
-    - script: dotnet test --no-build --logger trx --results-directory TestResults
-      displayName: 'Run unit tests'
-    
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFiles: 'TestResults/*.trx'
-    
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '\$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-
-# ─── DEPLOY TO STAGING ──────────────────────
-- stage: DeployStaging
-  displayName: 'Deploy to Staging'
-  dependsOn: Build
-  condition: and(succeeded(), eq(variables.isMain, true))
-  jobs:
-  - deployment: DeployStaging
-    environment: 'staging'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            inputs:
-              azureSubscription: 'staging-service-conn'
-              appName: 'myapp-staging'
-              package: '\$(Pipeline.Workspace)/drop/**/*.zip'
-
-# ─── DEPLOY TO PRODUCTION ───────────────────
-- stage: DeployProd
-  displayName: 'Deploy to Production'
-  dependsOn: DeployStaging
-  condition: succeeded()
-  jobs:
-  - deployment: DeployProd
-    environment: 'production'  # Has approval gate
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            inputs:
-              azureSubscription: 'prod-service-conn'
-              appName: 'myapp-prod'
-              package: '\$(Pipeline.Workspace)/drop/**/*.zip'` },
-    { title: "Pipeline Templates (DRY Principle)", code: `# templates/deploy-template.yml
-# Reusable deployment template — call from main pipeline
-
-parameters:
-  - name: environment
-    type: string
-  - name: serviceConnection
-    type: string
-  - name: appName
-    type: string
-  - name: requiresApproval
-    type: boolean
-    default: false
-
-stages:
-- stage: Deploy_\${{ parameters.environment }}
-  displayName: 'Deploy → \${{ parameters.environment }}'
-  jobs:
-  - deployment: Deploy
-    environment: '\${{ parameters.environment }}'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: drop
-          
-          - task: AzureCLI@2
-            displayName: 'Deploy via Azure CLI'
-            inputs:
-              azureSubscription: '\${{ parameters.serviceConnection }}'
-              scriptType: 'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                echo "Deploying to \${{ parameters.environment }}..."
-                az webapp deploy \\
-                  --name \${{ parameters.appName }} \\
-                  --src-path \$(Pipeline.Workspace)/drop/app.zip \\
-                  --type zip
-                echo "✅ Deployment complete!"
-
-# ─── Usage in main pipeline ─────────────────
-# azure-pipelines.yml
-stages:
-- template: templates/deploy-template.yml
-  parameters:
-    environment: staging
-    serviceConnection: 'staging-conn'
-    appName: 'myapp-staging'
-
-- template: templates/deploy-template.yml
-  parameters:
-    environment: production
-    serviceConnection: 'prod-conn'
-    appName: 'myapp-prod'
-    requiresApproval: true` },
-    { title: "GitHub Actions Workflow", code: `# .github/workflows/ci-cd.yml
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-env:
-  AZURE_WEBAPP_NAME: 'my-web-app'
-  NODE_VERSION: '20'
-
-jobs:
-  # ─── BUILD & TEST ─────────────────────────
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: \${{ env.NODE_VERSION }}
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run linting
-      run: npm run lint
-    
-    - name: Run tests with coverage
-      run: npm test -- --coverage
-    
-    - name: Build application
-      run: npm run build
-    
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-build
-        path: ./dist
-
-  # ─── DEPLOY ───────────────────────────────
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: app-build
-        path: ./dist
-    
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: \${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: \${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: ./dist` },
+    { title: "Azure DevOps \u2014 Multi-Stage YAML Pipeline", code: "# azure-pipelines.yml\ntrigger:\n  branches:\n    include:\n      - main\n      - release/*\n  paths:\n    exclude:\n      - '**/*.md'\n\npool:\n  vmImage: 'ubuntu-latest'\n\nvariables:\n  buildConfiguration: 'Release'\n  dotnetVersion: '8.0.x'\n  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]\n\nstages:\n- stage: Build\n  displayName: 'Build & Test'\n  jobs:\n  - job: BuildApp\n    steps:\n    - task: UseDotNet@2\n      inputs:\n        version: $(dotnetVersion)\n    - script: dotnet restore\n    - script: dotnet build --configuration $(buildConfiguration)\n    - script: dotnet test --no-build --logger trx\n    - task: PublishTestResults@2\n      inputs:\n        testResultsFiles: 'TestResults/*.trx'\n    - task: PublishBuildArtifacts@1\n      inputs:\n        PathtoPublish: '$(Build.ArtifactStagingDirectory)'\n        ArtifactName: 'drop'\n\n- stage: DeployStaging\n  dependsOn: Build\n  condition: and(succeeded(), eq(variables.isMain, true))\n  jobs:\n  - deployment: DeployStaging\n    environment: 'staging'\n    strategy:\n      runOnce:\n        deploy:\n          steps:\n          - task: AzureWebApp@1\n            inputs:\n              azureSubscription: 'staging-conn'\n              appName: 'myapp-staging'" },
+    { title: "Pipeline Templates (DRY Principle)", code: "# templates/deploy-template.yml\nparameters:\n  - name: environment\n    type: string\n  - name: serviceConnection\n    type: string\n  - name: appName\n    type: string\n\nstages:\n- stage: Deploy_${{ parameters.environment }}\n  displayName: 'Deploy \u2192 ${{ parameters.environment }}'\n  jobs:\n  - deployment: Deploy\n    environment: '${{ parameters.environment }}'\n    strategy:\n      runOnce:\n        deploy:\n          steps:\n          - download: current\n            artifact: drop\n          - task: AzureCLI@2\n            inputs:\n              azureSubscription: '${{ parameters.serviceConnection }}'\n              scriptType: 'bash'\n              inlineScript: |\n                az webapp deploy \\\n                  --name ${{ parameters.appName }} \\\n                  --src-path $(Pipeline.Workspace)/drop/app.zip \\\n                  --type zip\n\n# Usage in main pipeline:\nstages:\n- template: templates/deploy-template.yml\n  parameters:\n    environment: staging\n    serviceConnection: 'staging-conn'\n    appName: 'myapp-staging'\n- template: templates/deploy-template.yml\n  parameters:\n    environment: production\n    serviceConnection: 'prod-conn'\n    appName: 'myapp-prod'" },
+    { title: "GitHub Actions Workflow", code: "# .github/workflows/ci-cd.yml\nname: CI/CD Pipeline\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\nenv:\n  AZURE_WEBAPP_NAME: 'my-web-app'\n  NODE_VERSION: '20'\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n    - uses: actions/checkout@v4\n    - name: Setup Node.js\n      uses: actions/setup-node@v4\n      with:\n        node-version: ${{ env.NODE_VERSION }}\n        cache: 'npm'\n    - run: npm ci\n    - run: npm run lint\n    - run: npm test -- --coverage\n    - run: npm run build\n    - uses: actions/upload-artifact@v4\n      with:\n        name: app-build\n        path: ./dist\n\n  deploy:\n    needs: build\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    steps:\n    - uses: actions/download-artifact@v4\n      with:\n        name: app-build\n        path: ./dist\n    - uses: azure/webapps-deploy@v2\n      with:\n        app-name: ${{ env.AZURE_WEBAPP_NAME }}\n        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}\n        package: ./dist" },
     { title: "Interview Questions", isChecklist: true, items: [
         "Explain stages vs jobs vs steps in Azure DevOps YAML",
         "How do you pass variables between stages? (output variables)",
@@ -1298,283 +589,71 @@ jobs:
         "How do you manage secrets in pipelines? (Variable groups, Key Vault)",
         "Difference between environments and stages?",
         "How do you implement rollback in a pipeline?",
-        "Explain conditions and expressions (\${{ }}, \\$(var), runtime)",
+        "Explain conditions and expressions in YAML pipelines",
         "How do you cache dependencies for faster builds?"
     ]}
 ];
 
 const kubernetesCards = [
-    { title: "Deployment with Health Probes & Resources", code: `# deployment.yaml
-# Production-ready deployment with rolling updates, probes, and resource management
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web-app
-  namespace: production
-  labels:
-    app: web-app
-    version: v2
-spec:
-  replicas: 3
-  
-  # Rolling update strategy for zero-downtime deploys
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1        # Max extra pods during update
-      maxUnavailable: 0  # Never less than desired count
-  
-  selector:
-    matchLabels:
-      app: web-app
-  
-  template:
-    metadata:
-      labels:
-        app: web-app
-        version: v2
-    spec:
-      containers:
-      - name: web-app
-        image: myregistry.azurecr.io/web-app:v2.1.0
-        ports:
-        - containerPort: 8080
-        
-        # Resource Management
-        resources:
-          requests:          # Minimum guaranteed
-            memory: "128Mi"
-            cpu: "250m"
-          limits:            # Maximum allowed
-            memory: "512Mi"
-            cpu: "1000m"
-        
-        # Liveness: Is the container alive? Restart if fails.
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 30
-          failureThreshold: 3
-        
-        # Readiness: Can it receive traffic? Remove from LB if fails.
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        
-        # Environment from ConfigMap and Secret
-        env:
-        - name: APP_ENV
-          value: "production"
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: host
-        - name: LOG_LEVEL
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: log-level` },
-    { title: "Service, Ingress & Auto-Scaling", code: `# service.yaml — Expose pods internally
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-app-svc
-  namespace: production
-spec:
-  selector:
-    app: web-app
-  ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
-  type: ClusterIP
-
----
-# ingress.yaml — Expose externally with TLS
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: web-app-ingress
-  namespace: production
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-spec:
-  tls:
-  - hosts:
-    - app.example.com
-    secretName: app-tls-cert
-  rules:
-  - host: app.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: web-app-svc
-            port:
-              number: 80
-
----
-# hpa.yaml — Horizontal Pod Autoscaler
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: web-app-hpa
-  namespace: production
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: web-app
-  minReplicas: 3
-  maxReplicas: 15
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80` },
-    { title: "kubectl Troubleshooting Commands", code: `# ─── POD DEBUGGING ──────────────────────────
-# List pods with status
-kubectl get pods -n production -o wide
-
-# Detailed pod info (events, conditions, volumes)
-kubectl describe pod <pod-name> -n production
-
-# View logs (current and previous crashed container)
-kubectl logs <pod-name> -n production --tail=100
-kubectl logs <pod-name> -n production --previous
-
-# Execute into a running pod
-kubectl exec -it <pod-name> -n production -- /bin/sh
-
-# ─── RESOURCE MONITORING ────────────────────
-kubectl top pods -n production    # CPU/memory per pod
-kubectl top nodes                 # CPU/memory per node
-kubectl get events --sort-by='.lastTimestamp' -n production
-
-# ─── DEPLOYMENTS & ROLLBACKS ────────────────
-kubectl rollout status deployment/web-app -n production
-kubectl rollout history deployment/web-app -n production
-kubectl rollout undo deployment/web-app -n production
-kubectl rollout undo deployment/web-app --to-revision=3
-
-# Scale manually
-kubectl scale deployment web-app --replicas=5 -n production
-
-# ─── CONFIG & SECRETS ───────────────────────
-kubectl create configmap app-config --from-file=config.json
-kubectl create secret generic db-creds --from-literal=password=s3cr3t
-kubectl get configmaps -n production
-kubectl get secrets -n production
-
-# ─── CLUSTER HEALTH ─────────────────────────
-kubectl get nodes -o wide
-kubectl cluster-info
-kubectl get componentstatuses
-
-# ─── NETWORK DEBUGGING ──────────────────────
-kubectl port-forward svc/web-app-svc 8080:80 -n production
-kubectl get endpoints web-app-svc -n production
-kubectl run tmp-debug --image=busybox -it --rm -- wget -qO- http://web-app-svc` },
-    { title: "Helm Chart Basics", code: `# Chart.yaml — Chart metadata
-apiVersion: v2
-name: web-app
-version: 1.2.0
-appVersion: "2.1.0"
-description: Web application Helm chart
-
-# values.yaml — Default configuration
-replicaCount: 3
-
-image:
-  repository: myregistry.azurecr.io/web-app
-  tag: "2.1.0"
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: true
-  host: app.example.com
-
-resources:
-  requests:
-    cpu: 250m
-    memory: 128Mi
-  limits:
-    cpu: 1000m
-    memory: 512Mi
-
-autoscaling:
-  enabled: true
-  minReplicas: 3
-  maxReplicas: 10
-  targetCPU: 70
-
-# ─── Helm Commands ──────────────────────────
-# Install a chart
-helm install web-app ./charts/web-app -n production
-
-# Upgrade with custom values
-helm upgrade web-app ./charts/web-app -f prod-values.yaml
-
-# Rollback to previous version
-helm rollback web-app 1
-
-# List installed releases
-helm list -n production
-
-# Template rendering (dry run)
-helm template web-app ./charts/web-app --debug
-
-# Uninstall
-helm uninstall web-app -n production` },
+    { title: "Deployment with Health Probes & Resources", code: "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web-app\n  namespace: production\nspec:\n  replicas: 3\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n  selector:\n    matchLabels:\n      app: web-app\n  template:\n    metadata:\n      labels:\n        app: web-app\n    spec:\n      containers:\n      - name: web-app\n        image: myregistry.azurecr.io/web-app:v2.1.0\n        ports:\n        - containerPort: 8080\n        resources:\n          requests:\n            memory: \"128Mi\"\n            cpu: \"250m\"\n          limits:\n            memory: \"512Mi\"\n            cpu: \"1000m\"\n        livenessProbe:\n          httpGet:\n            path: /healthz\n            port: 8080\n          initialDelaySeconds: 15\n          periodSeconds: 30\n        readinessProbe:\n          httpGet:\n            path: /ready\n            port: 8080\n          initialDelaySeconds: 5\n          periodSeconds: 10\n        env:\n        - name: DB_HOST\n          valueFrom:\n            secretKeyRef:\n              name: db-credentials\n              key: host" },
+    { title: "Service, Ingress & HPA", code: "apiVersion: v1\nkind: Service\nmetadata:\n  name: web-app-svc\nspec:\n  selector:\n    app: web-app\n  ports:\n  - port: 80\n    targetPort: 8080\n  type: ClusterIP\n---\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: web-app-ingress\n  annotations:\n    nginx.ingress.kubernetes.io/rewrite-target: /\n    cert-manager.io/cluster-issuer: \"letsencrypt-prod\"\nspec:\n  tls:\n  - hosts:\n    - app.example.com\n    secretName: app-tls-cert\n  rules:\n  - host: app.example.com\n    http:\n      paths:\n      - path: /\n        pathType: Prefix\n        backend:\n          service:\n            name: web-app-svc\n            port:\n              number: 80\n---\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: web-app-hpa\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: web-app\n  minReplicas: 3\n  maxReplicas: 15\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 70" },
+    { title: "kubectl Troubleshooting Commands", code: "# POD DEBUGGING\nkubectl get pods -n production -o wide\nkubectl describe pod <pod-name> -n production\nkubectl logs <pod-name> -n production --tail=100\nkubectl logs <pod-name> --previous\nkubectl exec -it <pod-name> -- /bin/sh\n\n# RESOURCE MONITORING\nkubectl top pods -n production\nkubectl top nodes\nkubectl get events --sort-by='.lastTimestamp'\n\n# DEPLOYMENTS & ROLLBACKS\nkubectl rollout status deployment/web-app\nkubectl rollout history deployment/web-app\nkubectl rollout undo deployment/web-app\nkubectl rollout undo deployment/web-app --to-revision=3\nkubectl scale deployment web-app --replicas=5\n\n# CONFIG & SECRETS\nkubectl create configmap app-config --from-file=config.json\nkubectl create secret generic db-creds --from-literal=password=s3cr3t\n\n# NETWORK DEBUGGING\nkubectl port-forward svc/web-app-svc 8080:80\nkubectl get endpoints web-app-svc\nkubectl run tmp-debug --image=busybox -it --rm -- wget -qO- http://web-app-svc" },
     { title: "Interview Questions", isChecklist: true, items: [
         "Explain Pod vs Deployment vs ReplicaSet relationship",
         "How does a rolling update work? What triggers rollback?",
-        "Liveness vs Readiness vs Startup probes — when use each?",
-        "How do you debug CrashLoopBackOff? (describe, logs --previous)",
-        "Resource requests vs limits — what happens when limits exceeded?",
-        "How does K8s DNS work? How do Services discover each other?",
-        "Ingress Controller vs LoadBalancer Service — tradeoffs?",
-        "How to manage secrets securely? (External Secrets, sealed secrets)",
-        "StatefulSet vs Deployment — when to use each?",
+        "Liveness vs Readiness vs Startup probes \u2014 when use each?",
+        "How do you debug CrashLoopBackOff?",
+        "Resource requests vs limits \u2014 what happens when limits exceeded?",
+        "How does K8s DNS work? Service discovery?",
+        "Ingress Controller vs LoadBalancer Service \u2014 tradeoffs?",
+        "How to manage secrets securely?",
+        "StatefulSet vs Deployment \u2014 when to use each?",
         "How does HPA work? Custom metrics vs resource metrics?",
         "Zero-downtime deployment strategies in Kubernetes?",
-        "PersistentVolume vs PVC — explain the binding lifecycle"
+        "PersistentVolume vs PVC \u2014 explain the binding lifecycle"
     ]}
 ];
 
+// ============================================================
+// DATA: Azure DevOps Tab (NEW)
+// ============================================================
+const azureDevOpsCards = [
+    { title: "Azure DevOps Services Overview", code: "# Azure DevOps \u2014 Core Services\n#\n# 1. Azure Boards   \u2192 Work item tracking, sprints, backlogs\n# 2. Azure Repos    \u2192 Git repositories, branch policies\n# 3. Azure Pipelines\u2192 CI/CD automation (YAML or Classic)\n# 4. Azure Artifacts \u2192 Package management (NuGet, npm, Maven)\n# 5. Azure Test Plans\u2192 Manual & automated testing\n\n# Key Concepts:\n# - Organizations > Projects > Repos/Pipelines\n# - Service Connections (link to Azure, AWS, etc.)\n# - Variable Groups (shared secrets across pipelines)\n# - Environments (logical targets with approvals)\n# - Agent Pools (Microsoft-hosted or self-hosted)\n\n# Common CLI commands:\naz devops configure --defaults organization=https://dev.azure.com/myorg\naz pipelines run --name 'CI-Pipeline' --branch main\naz pipelines variable-group list\naz repos pr create --title 'Feature X' --target-branch main\naz boards work-item create --type 'Bug' --title 'Fix login issue'" },
+    { title: "Branch Policies & Pull Requests", code: "# Branch Policies (protect main branch):\n# Settings > Repos > Branches > main > Branch Policies\n#\n# 1. Require minimum number of reviewers: 2\n# 2. Check for linked work items: Required\n# 3. Check for comment resolution: Required\n# 4. Build validation: Run CI before merge\n# 5. Require merge strategy: Squash merge\n\n# Pull Request Workflow:\n# 1. Create feature branch from main\ngit checkout -b feature/add-monitoring main\n\n# 2. Make changes, commit with linked work item\ngit commit -m \"Add health check endpoint AB#1234\"\n\n# 3. Push and create PR\ngit push -u origin feature/add-monitoring\naz repos pr create \\\n  --title \"Add health check endpoint\" \\\n  --description \"Implements /healthz for K8s probes\" \\\n  --target-branch main \\\n  --work-items 1234\n\n# 4. PR triggers build validation pipeline\n# 5. Reviewers approve (min 2 required)\n# 6. Squash merge to main\n# 7. Auto-delete feature branch\n\n# PR Best Practices:\n# - Small, focused PRs (< 400 lines)\n# - Descriptive title with work item link\n# - Include screenshots for UI changes\n# - Self-review before requesting others" },
+    { title: "Service Connections & Variable Groups", code: "# Service Connections\n# (Project Settings > Service Connections)\n#\n# Types:\n# - Azure Resource Manager (for deploying to Azure)\n# - Kubernetes (connect to AKS/clusters)\n# - Docker Registry (ACR, Docker Hub)\n# - Generic (custom REST APIs)\n# - GitHub (for cross-platform pipelines)\n\n# Azure RM Service Connection (Workload Identity Federation):\n# - Preferred over Service Principal + Secret\n# - No secret rotation needed\n# - Scoped to specific subscription/resource group\n\n# Variable Groups\n# (Pipelines > Library > Variable Groups)\n#\n# Use cases:\n# - Share variables across multiple pipelines\n# - Link to Azure Key Vault for secrets\n# - Environment-specific configurations\n\n# YAML Usage:\nvariables:\n- group: 'production-secrets'  # Links variable group\n- name: localVar\n  value: 'hello'\n\n# Key Vault Integration:\n# Variable Group > Link secrets from Azure Key Vault\n# - Select service connection\n# - Select Key Vault\n# - Choose which secrets to expose\n# - Secrets become pipeline variables automatically\n\n# Security Best Practices:\n# - Never store secrets in plain YAML\n# - Use Key Vault-linked variable groups\n# - Restrict variable group access by pipeline\n# - Audit secret access with Key Vault logs" },
+    { title: "Environments, Approvals & Gates", code: "# Environments (Pipelines > Environments)\n# Logical targets for deployments with governance\n\n# Create environments:\n# - development (auto-deploy, no approvals)\n# - staging (1 approver, business hours only)\n# - production (2 approvers + health check gate)\n\n# Approval Configuration:\n# Environment > Approvals and checks\n# Types:\n# 1. Approvals - Human sign-off before deploy\n# 2. Branch control - Only deploy from specific branches  \n# 3. Business hours - Only deploy Mon-Fri 9am-5pm\n# 4. Invoke REST API - Call external system\n# 5. Query Azure Monitor - Check for active alerts\n# 6. Required template - Enforce pipeline standards\n\n# YAML Environment Usage:\nstages:\n- stage: Production\n  jobs:\n  - deployment: DeployProd\n    environment: 'production'  # Triggers approvals\n    strategy:\n      runOnce:\n        deploy:\n          steps:\n          - script: echo 'Deploying to production'\n\n# Deployment History:\n# - Track what was deployed and when\n# - See which commits are in each environment\n# - Rollback to previous successful deployment\n\n# Gates (automated checks):\n# - Azure Monitor alerts (no active Sev1/2)\n# - SonarQube quality gate passed\n# - REST API returns success\n# - Invoke Azure Function for custom logic" },
+    { title: "Interview Q&A", isChecklist: true, items: [
+        "What are the 5 core services of Azure DevOps?",
+        "Explain Service Connections \u2014 types and security best practices",
+        "How do you implement branch policies for code quality?",
+        "What are Variable Groups and how do they integrate with Key Vault?",
+        "Explain Environments vs Stages \u2014 how do approvals work?",
+        "How would you set up a deployment gate using Azure Monitor?",
+        "What is the difference between Microsoft-hosted and self-hosted agents?",
+        "How do you implement artifact versioning and promotion?",
+        "Explain pipeline triggers: CI, PR, scheduled, resource-based",
+        "How do you handle pipeline-as-code governance at scale?",
+        "What are YAML pipeline templates and extends keyword?",
+        "How do you troubleshoot a failing pipeline? (logs, debug variable)",
+        "Explain the Azure DevOps REST API \u2014 common automation scenarios",
+        "How do you migrate from Classic pipelines to YAML?"
+    ]}
+];
+
+// ============================================================
+// DATA: System Design, Behavioral (Generic Leadership Principles)
+// ============================================================
 const sysDesignCards = [
     { title: "Design a Monitoring System", items: ["Metrics collection: push (StatsD) vs pull (Prometheus scraping)", "Log aggregation: ELK stack or Azure Log Analytics pipeline", "Distributed tracing: correlation IDs, Jaeger/App Insights", "Alert routing: severity levels, escalation policies, PagerDuty/ICM", "Dashboard design: SLI/SLO visualization, Grafana/Power BI", "Capacity planning: trend analysis, predictive alerts", "Error budgets: remaining budget drives feature vs reliability work"] },
-    { title: "Design an Incident Management Pipeline", items: ["Detection → Alert → Triage → Mitigation → Resolution → RCA", "Severity classification: Sev1 (business down) → Sev4 (cosmetic)", "On-call design: follow-the-sun rotation, escalation timeouts", "Communication: status pages, stakeholder updates, war rooms", "Post-incident reviews: blameless, action items with owners/deadlines", "Automation: auto-remediation for known patterns (like your SRE Agent)", "Metrics: MTTA, MTTD, MTTR, incident volume trends"] },
-    { title: "Design a CI/CD Pipeline", items: ["Branching: trunk-based development vs GitFlow", "Build: compile, lint, SAST scanning, dependency audit", "Test pyramid: unit (fast, many) → integration → E2E (slow, few)", "Artifacts: immutable, versioned, stored in registry", "Deploy strategies: blue-green, canary (% traffic), rolling update", "Rollback: automated on health check failure, one-click manual", "Environments: dev → staging → production with approval gates"] },
+    { title: "Design an Incident Management Pipeline", items: ["Detection \u2192 Alert \u2192 Triage \u2192 Mitigation \u2192 Resolution \u2192 RCA", "Severity classification: Sev1 (business down) \u2192 Sev4 (cosmetic)", "On-call design: follow-the-sun rotation, escalation timeouts", "Communication: status pages, stakeholder updates, war rooms", "Post-incident reviews: blameless, action items with owners/deadlines", "Automation: auto-remediation for known patterns", "Metrics: MTTA, MTTD, MTTR, incident volume trends"] },
+    { title: "Design a CI/CD Pipeline", items: ["Branching: trunk-based development vs GitFlow", "Build: compile, lint, SAST scanning, dependency audit", "Test pyramid: unit (fast, many) \u2192 integration \u2192 E2E (slow, few)", "Artifacts: immutable, versioned, stored in registry", "Deploy strategies: blue-green, canary (% traffic), rolling update", "Rollback: automated on health check failure, one-click manual", "Environments: dev \u2192 staging \u2192 production with approval gates"] },
     { title: "Design for High Availability", items: ["Multi-region: active-active vs active-passive failover", "Load balancing: Layer 4 (TCP) vs Layer 7 (HTTP), health checks", "Circuit breaker: prevent cascade failures, fallback responses", "Graceful degradation: disable non-critical features under load", "Data: replication lag, consistency models (eventual vs strong)", "Chaos engineering: inject failures in staging, GameDay exercises", "Capacity: auto-scale on leading indicators, not lagging"] },
-    { title: "Framework: How to Answer SD Questions", items: ["1. CLARIFY — Ask about scale, users, SLAs, constraints (2 min)", "2. HIGH-LEVEL DESIGN — Draw components and data flow (5 min)", "3. DEEP DIVE — Detail 2-3 critical components (15 min)", "4. TRADE-OFFS — Discuss alternatives you considered", "5. RELIABILITY — Failure modes, redundancy, monitoring", "6. SCALABILITY — How does it grow 10x? 100x?", "7. OPERATIONAL — How do you deploy, monitor, debug this?"] }
+    { title: "Framework: How to Answer SD Questions", items: ["1. CLARIFY \u2014 Ask about scale, users, SLAs, constraints (2 min)", "2. HIGH-LEVEL DESIGN \u2014 Draw components and data flow (5 min)", "3. DEEP DIVE \u2014 Detail 2-3 critical components (15 min)", "4. TRADE-OFFS \u2014 Discuss alternatives you considered", "5. RELIABILITY \u2014 Failure modes, redundancy, monitoring", "6. SCALABILITY \u2014 How does it grow 10x? 100x?", "7. OPERATIONAL \u2014 How do you deploy, monitor, debug this?"] }
 ];
 
 const behavioralCards = [
-    { title: "Microsoft Leadership Principles", items: ["Growth Mindset — Always learning, embracing challenges and failure", "Customer Obsession — Decisions start with customer impact", "Diversity & Inclusion — Seeking diverse perspectives", "One Microsoft — Collaborating across teams and orgs", "Making a Difference — Impact beyond your immediate role"] },
-    { title: "Your STAR Stories (Ready to Use)", items: ["Leading under pressure: High-sev incident across 20+ services → drove resolution as DRI", "Driving change: Redesigned escalation framework → 32% faster resolution time", "Innovation from scratch: Built AI SRE Agent platform → 30-35% automated resolution", "Scaling leadership: Grew from IC to leading 32 engineers across India & US", "Eliminating waste: Removed 25K stale incidents + 500 noisy alerts → cleaner operations", "Knowledge multiplier: 175+ guides in 5 months → transformed team self-sufficiency", "Influencing without authority: Executive advocacy, aligning engineering priorities with data"] },
+    { title: "Leadership Principles (Generic)", items: ["Customer Obsession \u2014 Decisions start with customer impact", "Ownership \u2014 Think long-term, never say 'that's not my job'", "Invent & Simplify \u2014 Innovate, find simpler solutions", "Good Judgment \u2014 Use data + intuition to make right calls", "Learn & Be Curious \u2014 Always growing, exploring new ideas", "Hire & Develop the Best \u2014 Raise the performance bar", "Highest Standards \u2014 Relentlessly high quality bar", "Think Big \u2014 Bold direction that inspires results", "Bias for Action \u2014 Speed matters, calculated risk-taking", "Earn Trust \u2014 Listen, speak candidly, benchmark yourself", "Dive Deep \u2014 Operate at all levels, audit details", "Disagree & Commit \u2014 Challenge then fully commit", "Deliver Results \u2014 Focus on key inputs, deliver with quality", "Growth Mindset \u2014 Embrace challenges, learn from failure", "Collaboration \u2014 Work across teams for broader impact", "Making a Difference \u2014 Impact beyond immediate role"] },
+    { title: "Your STAR Stories (Ready to Use)", items: ["Leading under pressure: High-sev incident across 20+ services \u2192 drove resolution as DRI", "Driving change: Redesigned escalation framework \u2192 32% faster resolution time", "Innovation from scratch: Built AI SRE Agent platform \u2192 30-35% automated resolution", "Scaling leadership: Grew from IC to leading 32 engineers across India & US", "Eliminating waste: Removed 25K stale incidents + 500 noisy alerts \u2192 cleaner operations", "Knowledge multiplier: 175+ guides in 5 months \u2192 transformed team self-sufficiency", "Influencing without authority: Executive advocacy, aligning priorities with data"] },
     { title: "Common Behavioral Questions", isChecklist: true, items: [
         "Tell me about a time you handled a critical production incident",
         "Describe when you influenced a decision without direct authority",
@@ -1589,6 +668,135 @@ const behavioralCards = [
     ]}
 ];
 
+// ============================================================
+// DATA: STAR(L) Scenario Q&A (from STAR guides - genericized)
+// ============================================================
+const starScenarios = [
+    {
+        category: "Customer Obsession",
+        questions: [
+            {
+                q: "Tell me about a time you went above and beyond for a customer.",
+                answer: "<strong>S:</strong> When I took over the Azure Customer Support team (20 engineers), CSAT scores were critically low and customers were frustrated with automated rejections.<br><br><strong>T:</strong> I needed to identify root causes of low satisfaction and turn metrics around while maintaining operations.<br><br><strong>A:</strong> I audited 6 months of ticket data (~3,000 tickets), categorized by issue type, and discovered 45% fell into a single bucket with no helpful guidance. I redesigned response templates, created knowledge articles, retrained the team on empathetic communication, and implemented a feedback loop.<br><br><strong>R:</strong> CSAT improved 35% in 3 months. Repeat contacts for the same issue dropped 60%. Team confidence improved with proper tools and processes.<br><br><strong>L:</strong> Before blaming people, audit the process. Most customer dissatisfaction stems from systemic gaps. Data-driven root cause analysis yields massive improvements.",
+                altQuestions: ["Who was your most difficult customer?", "Tell me about a time you didn't meet customer expectations.", "How do you prioritize customer needs?", "Give an example of solving a systemic customer issue."]
+            },
+            {
+                q: "Describe a time you had to balance customer needs against technical constraints.",
+                answer: "<strong>S:</strong> A VIP customer raised a support request about being overcharged (nearly double) for Azure services. The previous engineer failed to resolve it, and the customer was already escalating.<br><br><strong>T:</strong> I needed to resolve the billing issue AND restore the customer's trust in our support organization.<br><br><strong>A:</strong> I personally took ownership: reviewed subscription usage data and billing history, confirmed the overcharge, engaged the billing team immediately, called the customer directly to explain and apologize, set up proactive alerts to prevent recurrence, and followed up within 48 hours to confirm refund.<br><br><strong>R:</strong> Customer received full refund, sent an appreciation email to my manager, and remained an Azure customer. This became my template for VIP escalations.<br><br><strong>L:</strong> For high-severity customer issues, personal ownership and proactive communication matter more than the technical fix. Customers remember how you made them feel.",
+                altQuestions: ["How do you handle escalated customer complaints?", "Describe resolving a complex billing or service issue.", "Tell me about a time you restored customer trust."]
+            }
+        ]
+    },
+    {
+        category: "Ownership",
+        questions: [
+            {
+                q: "Tell me about a time you took on a task beyond your job responsibilities.",
+                answer: "<strong>S:</strong> My senior management gave me a chance to lead a team supporting Skype for Business infrastructure and customer migrations (Skype to Teams). The team of experienced engineers was doing everything manually \u2014 maintenance, migrations of thousands of customers, and documentation.<br><br><strong>T:</strong> I needed to take ownership of the team's operational model and transform it, despite resistance from senior engineers who felt they should manage the team themselves.<br><br><strong>A:</strong> I conducted a thorough assessment of all manual processes and their impact. I introduced automation scripts for routine migrations, implemented a ticket management system, established SLAs for each process, created standard operating procedures, and built trust through 1:1 coaching sessions showing how automation freed them for higher-value work.<br><br><strong>R:</strong> Migration throughput improved from ~50 customers/week to 200+. Manual errors dropped 80%. Team members were promoted based on the new skills they developed. The transformation became a model for other teams.<br><br><strong>L:</strong> Ownership means being willing to face resistance for long-term improvements. When you take on something beyond your role, bring data and empathy \u2014 show people the 'why' before the 'what'.",
+                altQuestions: ["Describe taking ownership of a problem nobody else would.", "Tell me about an initiative you drove on a challenging project.", "How do you handle unclear responsibilities?"]
+            },
+            {
+                q: "Describe a time you identified and fixed a problem before it became critical.",
+                answer: "<strong>S:</strong> During a routine review of our incident management system, I noticed 25,000+ stale incidents accumulated over 18 months \u2014 abandoned tickets from previous teams, duplicate entries, and orphaned alerts creating noise that masked real issues.<br><br><strong>T:</strong> Nobody owned this problem. I decided to take ownership and clean up the operational debt before it caused a missed critical incident.<br><br><strong>A:</strong> I built a classification framework to categorize the backlog. Automated bulk closure of clearly stale items with proper documentation. Identified 500+ noisy alert rules generating false positives and worked with engineering to tune or remove them. Created a hygiene process to prevent future accumulation. Presented findings to leadership with projected risk if left unaddressed.<br><br><strong>R:</strong> Reduced incident noise by 70%. Signal-to-noise ratio improved dramatically \u2014 real incidents were now immediately visible. On-call engineers reported significantly reduced fatigue.<br><br><strong>L:</strong> Operational debt compounds silently. Proactive ownership of 'unsexy' cleanup work often delivers more value than building new features. Make the invisible visible through data.",
+                altQuestions: ["Tell me about a time you went beyond your scope.", "How do you handle technical debt?", "Describe proactively solving an operational problem."]
+            }
+        ]
+    },
+    {
+        category: "Invent & Simplify",
+        questions: [
+            {
+                q: "Tell me about a time you built something innovative from scratch.",
+                answer: "<strong>S:</strong> Our SRE team was spending 60%+ of time on repetitive incident response tasks \u2014 running the same diagnostic commands, applying known fixes, and following identical runbook steps for recurring issues.<br><br><strong>T:</strong> I envisioned an AI-driven automation platform that could handle routine incidents without human intervention, freeing engineers for complex problem-solving.<br><br><strong>A:</strong> I designed and built an AI SRE Agent platform that: ingests incoming incidents and classifies them using ML, matches against known resolution patterns from 175+ runbooks I authored, executes automated remediation steps with safety guardrails, escalates to humans only when confidence is low or actions require approval. I used Power Automate, Logic Apps, and custom scripts integrated with our incident management system.<br><br><strong>R:</strong> Achieved 30-35% automated incident resolution rate. Mean time to resolve for automated incidents dropped from 45 minutes to under 5 minutes. Engineers now focus on novel problems and reliability improvements.<br><br><strong>L:</strong> Innovation doesn't require greenfield. The best automation comes from deeply understanding repetitive pain points and building incrementally. Start with the highest-volume, lowest-risk scenarios and expand.",
+                altQuestions: ["Describe a process you significantly improved through automation.", "How have you used AI/ML to solve operational challenges?", "Tell me about building a platform from zero."]
+            }
+        ]
+    },
+    {
+        category: "Hire & Develop the Best",
+        questions: [
+            {
+                q: "How do you mentor engineers with different skill levels?",
+                answer: "<strong>S:</strong> I grew my responsibility from managing 8 engineers to leading 32 across India and the US, with skill levels ranging from junior analysts to senior engineers with 15+ years of experience.<br><br><strong>T:</strong> I needed to develop each person appropriately \u2014 juniors needed foundational skills while seniors needed strategic challenges and growth toward leadership.<br><br><strong>A:</strong> I created tiered development plans: For juniors \u2014 paired them with seniors on incidents, assigned progressively complex tickets, gave detailed feedback on every resolution. For mid-level \u2014 assigned ownership of specific service areas, coached on stakeholder communication. For seniors \u2014 empowered them to lead projects, represent the team in cross-org meetings, mentor juniors. I also authored 175+ knowledge guides to enable self-service learning and reduce dependency on tribal knowledge.<br><br><strong>R:</strong> 6 team members were promoted within 18 months. Team's self-service resolution rate increased from 40% to 75%. Attrition dropped significantly as people felt invested in.<br><br><strong>L:</strong> Development isn't one-size-fits-all. Meet people where they are. The best investment is enabling self-sufficiency through documentation and graduated responsibility.",
+                altQuestions: ["Tell me about building a high-performing team.", "Describe developing talent across different levels.", "How do you handle underperformers?", "What's your approach to knowledge sharing?"]
+            }
+        ]
+    },
+    {
+        category: "Bias for Action",
+        questions: [
+            {
+                q: "Tell me about a time you had to make a quick decision with limited information.",
+                answer: "<strong>S:</strong> A Sev1 incident hit our Xbox services affecting millions of users during a peak gaming period. Multiple services were degraded simultaneously, and initial diagnostics were inconclusive about root cause.<br><br><strong>T:</strong> As the incident DRI (Directly Responsible Individual), I needed to make rapid mitigation decisions while investigation continued, balancing speed of recovery against risk of making things worse.<br><br><strong>A:</strong> I applied the 'stop the bleeding first' principle: initiated a targeted rollback of the most recent deployment across the affected services (calculated risk based on deployment timeline correlation). Simultaneously spun up a parallel investigation track. Communicated to stakeholders that we were taking action while root cause was being determined. Established 15-minute check-in cadence with all engaged teams.<br><br><strong>R:</strong> Service recovered within 22 minutes of rollback initiation. Root cause was confirmed as a configuration change in the most recent deployment. Total customer impact reduced from potential hours to under 35 minutes. Post-incident review validated the decision framework.<br><br><strong>L:</strong> In high-severity incidents, imperfect action beats perfect analysis. Have pre-planned decision frameworks (like 'rollback first, investigate second') so you're not making novel decisions under pressure. Speed of mitigation matters more than speed of root cause identification.",
+                altQuestions: ["Describe handling a production outage under pressure.", "How do you make decisions during incidents?", "Tell me about a time quick action prevented a bigger problem."]
+            }
+        ]
+    },
+    {
+        category: "Earn Trust",
+        questions: [
+            {
+                q: "Describe when you influenced a decision without direct authority.",
+                answer: "<strong>S:</strong> Our engineering teams were consistently deprioritizing reliability work (monitoring improvements, runbook updates, alert tuning) in favor of feature development, leading to increasing incident frequency and longer resolution times.<br><br><strong>T:</strong> As an SRE leader without direct authority over engineering backlogs, I needed to influence engineering leadership to allocate meaningful time to reliability investments.<br><br><strong>A:</strong> I built a compelling data narrative: correlated incident trends with missing monitoring coverage, quantified the cost of each incident in engineer-hours and customer impact, projected the trajectory if no investment was made. I presented this to engineering leadership and VP-level stakeholders in their language (business impact, not just technical debt). Proposed a specific 'reliability tax' model: 20% of sprint capacity dedicated to reliability, with clear metrics showing ROI. Created a shared dashboard tracking reliability investment against incident reduction.<br><br><strong>R:</strong> Engineering leadership adopted the 20% reliability allocation. Within 2 quarters, incident volume dropped 40% and MTTR improved 32%. The model was adopted by 3 other teams. I was invited to present at the org-wide engineering review.<br><br><strong>L:</strong> To influence without authority, speak the audience's language and bring irrefutable data. Don't ask for trust \u2014 earn it by making others' lives measurably better. Propose specific, actionable solutions rather than just highlighting problems.",
+                altQuestions: ["How do you drive change when you don't control the decision?", "Tell me about gaining stakeholder buy-in for a technical initiative.", "Describe building trust with a skeptical team."]
+            }
+        ]
+    },
+    {
+        category: "Dive Deep",
+        questions: [
+            {
+                q: "Tell me about a time you identified a root cause that others missed.",
+                answer: "<strong>S:</strong> We had a recurring intermittent issue where a critical service would degrade for 5-10 minutes every few days. Multiple engineers had investigated and concluded it was 'network blips' or 'cloud provider instability' \u2014 essentially shrugging it off.<br><br><strong>T:</strong> The pattern was too regular to be random. I committed to finding the actual root cause despite previous engineers' conclusions.<br><br><strong>A:</strong> I correlated the degradation timestamps against every possible signal: deployment times, scheduled tasks, backup jobs, auto-scaling events, certificate rotations, and adjacent service activities. I built a custom query across our observability stack spanning 30 days of data. The correlation revealed the degradation coincided exactly with a nightly data sync job on an adjacent service that saturated a shared network link. The timeout was misconfigured to retry aggressively, amplifying the impact.<br><br><strong>R:</strong> Fixed the timeout configuration and moved the sync job to off-peak hours. The 'ghost' degradation that had persisted for 3 months was permanently resolved. Estimated prevention of ~30 minor incidents per quarter.<br><br><strong>L:</strong> 'Network issues' is often a lazy diagnosis. Always look for correlating patterns across time. The root cause of intermittent issues is usually something deterministic hiding behind apparent randomness. Persistence and cross-system thinking are essential.",
+                altQuestions: ["Describe a complex debugging scenario.", "How do you approach intermittent failures?", "Tell me about finding the needle in the haystack."]
+            }
+        ]
+    },
+    {
+        category: "Deliver Results",
+        questions: [
+            {
+                q: "Tell me about delivering results under tight timelines and pressure.",
+                answer: "<strong>S:</strong> When I joined the Xbox SRE team, the escalation framework was fragmented \u2014 different teams handled incidents differently, there was no unified severity classification, and resolution times were inconsistent. Leadership wanted a unified framework within 60 days for an upcoming executive review.<br><br><strong>T:</strong> I needed to design, implement, and roll out a complete escalation framework across 20+ services with multiple stakeholder teams \u2014 all within a tight deadline.<br><br><strong>A:</strong> I broke the work into parallel streams: Week 1-2: Audited existing processes across all teams, identified commonalities and gaps. Week 2-3: Designed the unified framework (severity levels, escalation paths, SLAs, communication templates). Week 3-4: Built the tooling (automated routing, dashboards, notification workflows). Week 4-6: Rolled out team-by-team with training sessions. Week 6-8: Measured results and iterated. I ran daily standups, cleared blockers aggressively, and personally handled the most complex integration points.<br><br><strong>R:</strong> Delivered on time for the executive review. Resolution time improved 32% within the first quarter. The framework became the standard for the broader organization. Received a recognition award from the VP for impact and speed of delivery.<br><br><strong>L:</strong> Large transformations under pressure require ruthless prioritization and parallel execution. Don't try to make it perfect \u2014 make it good enough to ship, then iterate. Daily cadence and visible progress build momentum and stakeholder confidence.",
+                altQuestions: ["How do you handle competing priorities with tight deadlines?", "Describe a major project you delivered on time.", "Tell me about driving organizational change quickly."]
+            }
+        ]
+    },
+    {
+        category: "Disagree & Commit",
+        questions: [
+            {
+                q: "Tell me about a time you disagreed with your manager or a senior stakeholder.",
+                answer: "<strong>S:</strong> My manager proposed that we should handle all Sev2 incidents with the same urgency and process as Sev1s, essentially treating them as 'all-hands' events. This was in response to a few missed Sev2s that had escalated.<br><br><strong>T:</strong> I believed this approach would cause alert fatigue and burn out the on-call team, but I needed to respectfully challenge while proposing a better alternative.<br><br><strong>A:</strong> I gathered data: showed that Sev2 volume was 5x Sev1, and treating all as all-hands would mean the team was in 'war room' mode 60% of the time. I proposed an alternative: enhanced Sev2 process with stricter SLAs and a dedicated secondary responder, but NOT full all-hands mobilization. I presented both options with projected outcomes and costs. After discussion, my manager agreed to try my approach for one quarter with clear success metrics.<br><br><strong>R:</strong> The refined Sev2 process caught all escalation scenarios (zero missed Sev2s escalating) while keeping team utilization sustainable. On-call satisfaction scores improved 25%. My manager publicly acknowledged the better approach in the team retrospective.<br><br><strong>L:</strong> Disagreeing effectively requires: (1) data over opinion, (2) proposing alternatives not just critiquing, (3) agreeing on success criteria so both parties can evaluate objectively. Once a decision is made, commit fully regardless of whose idea won.",
+                altQuestions: ["How do you handle conflict with leadership?", "Describe pushing back on a decision you disagreed with.", "Tell me about a time you were overruled and how you handled it."]
+            }
+        ]
+    },
+    {
+        category: "Highest Standards",
+        questions: [
+            {
+                q: "Tell me about a time you raised the quality bar for your team.",
+                answer: "<strong>S:</strong> When I took over the SRE team, post-incident reviews were perfunctory \u2014 a quick email summary with no structured analysis, no action items tracking, and the same issues recurring month after month.<br><br><strong>T:</strong> I needed to transform our post-incident review process from a checkbox exercise into a genuine learning and improvement mechanism.<br><br><strong>A:</strong> I designed a structured post-incident review framework: standardized template with timeline, impact, root cause (5 Whys), contributing factors, and action items. Instituted blameless review culture \u2014 explicitly stated in guidelines. Required all action items to have owners and deadlines. Created a tracking dashboard for action item completion. Made review attendance mandatory for involved teams. Published learnings broadly (redacted) so other teams could benefit. Personally led the first 10 reviews to model the expected quality.<br><br><strong>R:</strong> Action item completion rate went from ~30% to 85%. Recurring incidents of the same type dropped 60% over two quarters. Other teams adopted our framework. Engineers reported feeling safer to report issues early, knowing the culture was blameless.<br><br><strong>L:</strong> Raising standards requires both structural change (templates, tracking) and cultural change (blameless, modeling behavior). You must lead by example first, then codify the standard, then measure adherence.",
+                altQuestions: ["How do you establish operational excellence?", "Describe improving a broken process.", "Tell me about implementing blameless post-mortems."]
+            }
+        ]
+    },
+    {
+        category: "Think Big",
+        questions: [
+            {
+                q: "Describe a bold vision you championed and how you executed it.",
+                answer: "<strong>S:</strong> Our team's knowledge was entirely tribal \u2014 locked in senior engineers' heads. New team members took 6+ months to become effective. When key people went on leave, resolution times spiked 3x.<br><br><strong>T:</strong> I envisioned transforming our team from dependent on individuals to a self-service knowledge organization where any engineer could resolve any issue with proper documentation.<br><br><strong>A:</strong> I set an ambitious goal: 175 comprehensive runbooks and troubleshooting guides in 5 months. I created a template for consistency, assigned ownership by service area, set weekly targets, reviewed every guide for quality, and gamified progress with a visible leaderboard. Integrated guides directly into our incident management workflow so they surfaced automatically during relevant incidents. Built a search-first culture \u2014 'check the guide before escalating'.<br><br><strong>R:</strong> Delivered 175+ guides on schedule. New engineer ramp-up time reduced from 6 months to 6 weeks. Self-service resolution increased from 40% to 75%. On-call engineers reported dramatically reduced stress. The guides also became the training material for the AI SRE Agent I later built.<br><br><strong>L:</strong> Thinking big doesn't mean thinking alone. Set an ambitious target, break it into achievable milestones, create accountability, and celebrate progress. The compound effect of documentation is massive \u2014 it's the gift that keeps giving long after you've moved on.",
+                altQuestions: ["Tell me about a transformational initiative you led.", "How do you approach large-scale organizational change?", "Describe creating something that outlasted your tenure."]
+            }
+        ]
+    }
+];
+
+// ============================================================
+// DATA: Problem Tracker
+// ============================================================
 const problemTracker = [
     { num: 1, name: "Two Sum", diff: "easy", pattern: "Hash Map" },
     { num: 2, name: "Add Two Numbers", diff: "medium", pattern: "Linked List" },
@@ -1626,10 +834,10 @@ const problemTracker = [
 // RENDERING FUNCTIONS
 // ============================================================
 function getProgress() {
-    return JSON.parse(localStorage.getItem('interviewPrep') || '{}');
+    return JSON.parse(localStorage.getItem('interviewPrepV2') || '{}');
 }
 function saveProgress(data) {
-    localStorage.setItem('interviewPrep', JSON.stringify(data));
+    localStorage.setItem('interviewPrepV2', JSON.stringify(data));
     updateProgressBar();
 }
 
@@ -1657,21 +865,21 @@ function renderSchedule() {
                 <div class="day-number ${isComplete ? 'completed' : ''}">D${day.day}</div>
                 <div class="day-info">
                     <h3>${day.title}</h3>
-                    <p>${day.time} • ${day.topics.length} topics • ${day.infra}</p>
+                    <p>${day.time} \u2022 ${day.topics.length} topics \u2022 ${day.infra}</p>
                 </div>
-                <span class="day-toggle">▼</span>
+                <span class="day-toggle">\u25BC</span>
             </div>
             <div class="day-body">
                 <div class="day-section">
-                    <h4>📘 Topics & Explanations</h4>
+                    <h4>\uD83D\uDCD8 Topics & Explanations</h4>
                     <ul>${day.topics.map(t => `<li><strong>${t.name}:</strong> ${t.desc}</li>`).join('')}</ul>
                 </div>
                 <div class="day-section">
-                    <h4>🔗 Resources & Videos</h4>
-                    <div>${day.resources.map(r => `<a href="${r.url}" target="_blank" class="resource-link ${r.type}">${r.type === 'youtube' ? '▶' : '🔗'} ${r.label}</a>`).join('')}</div>
+                    <h4>\uD83D\uDD17 Resources & Videos</h4>
+                    <div>${day.resources.map(r => `<a href="${r.url}" target="_blank" class="resource-link ${r.type}">${r.type === 'youtube' ? '\u25B6' : '\uD83D\uDD17'} ${r.label}</a>`).join('')}</div>
                 </div>
                 <div class="day-section">
-                    <h4>🏗️ Infrastructure Focus</h4>
+                    <h4>\uD83C\uDFD7\uFE0F Infrastructure Focus</h4>
                     <p>${day.infra}</p>
                 </div>
                 <div style="margin-top:1rem;">
@@ -1691,11 +899,14 @@ function renderCodeCards(containerId, problems) {
         <div class="card">
             <h3>${p.title}</h3>
             <div class="code-card">
-                <div class="code-card-header">
+                <div class="code-card-header" onclick="toggleCode(this)">
                     <span class="code-card-title">${containerId.includes('python') ? 'Python' : containerId.includes('csharp') ? 'C#' : ''}</span>
-                    <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    <div>
+                        <button class="code-card-toggle">\u25B6 Show Code</button>
+                        <button class="copy-btn" onclick="event.stopPropagation();copyCode(this)">\uD83D\uDCCB Copy</button>
+                    </div>
                 </div>
-                <pre>${escapeHtml(p.code)}</pre>
+                <pre class="collapsed">${escapeHtml(p.code)}</pre>
             </div>
         </div>
     `).join('');
@@ -1712,7 +923,7 @@ function renderInfraCards(containerId, cards) {
                 return `<li class="${progress[key] ? 'done' : ''}"><input type="checkbox" data-key="${key}" ${progress[key] ? 'checked' : ''} onchange="handleCheck(this)"><span>${item}</span></li>`;
             }).join('')}</ul></div>`;
         }
-        return `<div class="card"><h3>${card.title}</h3><div class="code-card"><div class="code-card-header"><span class="code-card-title">${containerId}</span><button class="copy-btn" onclick="copyCode(this)">📋 Copy</button></div><pre>${escapeHtml(card.code)}</pre></div></div>`;
+        return `<div class="card"><h3>${card.title}</h3><div class="code-card"><div class="code-card-header" onclick="toggleCode(this)"><span class="code-card-title">${containerId}</span><div><button class="code-card-toggle">\u25B6 Show Code</button><button class="copy-btn" onclick="event.stopPropagation();copyCode(this)">\uD83D\uDCCB Copy</button></div></div><pre class="collapsed">${escapeHtml(card.code)}</pre></div></div>`;
     }).join('');
 }
 
@@ -1734,12 +945,33 @@ function renderListCards(containerId, cards) {
     }).join('');
 }
 
+function renderStarScenarios() {
+    const container = document.getElementById('star-qa-container');
+    container.innerHTML = starScenarios.map((cat, ci) => `
+        <div style="margin-bottom:2rem;">
+            <h3 style="color:var(--accent);margin-bottom:1rem;font-size:1.1rem;">\uD83C\uDFAF ${cat.category}</h3>
+            ${cat.questions.map((item, qi) => `
+                <div class="qa-item">
+                    <div class="qa-question" onclick="toggleQA(this)">
+                        <span class="qa-icon">\u25B6</span>
+                        <span>${item.q}</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p>${item.answer}</p>
+                        ${item.altQuestions ? `<div class="qa-alt-questions"><h5>\uD83D\uDD04 Same story answers these questions too:</h5><ul>${item.altQuestions.map(aq => `<li>${aq}</li>`).join('')}</ul></div>` : ''}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `).join('');
+}
+
 function renderProblemTracker() {
     const container = document.getElementById('problem-tracker');
     const progress = getProgress();
     
     container.innerHTML = `
-        <thead><tr><th>✓</th><th>#</th><th>Problem</th><th>Difficulty</th><th>Pattern</th></tr></thead>
+        <thead><tr><th>\u2713</th><th>#</th><th>Problem</th><th>Difficulty</th><th>Pattern</th></tr></thead>
         <tbody>${problemTracker.map((p, i) => {
             const key = `lc-${p.num}`;
             return `<tr class="${progress[key] ? 'done' : ''}">
@@ -1759,13 +991,36 @@ function renderProblemTracker() {
 function toggleDay(header) {
     const body = header.nextElementSibling;
     const isOpen = body.classList.contains('open');
-    // Close all
     document.querySelectorAll('.day-body').forEach(b => b.classList.remove('open'));
     document.querySelectorAll('.day-header').forEach(h => h.classList.remove('open'));
-    // Toggle current
     if (!isOpen) {
         body.classList.add('open');
         header.classList.add('open');
+    }
+}
+
+function toggleCode(header) {
+    const pre = header.nextElementSibling;
+    const btn = header.querySelector('.code-card-toggle');
+    const isCollapsed = pre.classList.contains('collapsed');
+    if (isCollapsed) {
+        pre.classList.remove('collapsed');
+        btn.textContent = '\u25BC Hide Code';
+    } else {
+        pre.classList.add('collapsed');
+        btn.textContent = '\u25B6 Show Code';
+    }
+}
+
+function toggleQA(el) {
+    const answer = el.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    // Close all in same category
+    el.closest('[style]').querySelectorAll('.qa-answer').forEach(a => a.classList.remove('open'));
+    el.closest('[style]').querySelectorAll('.qa-question').forEach(q => q.classList.remove('open'));
+    if (!isOpen) {
+        answer.classList.add('open');
+        el.classList.add('open');
     }
 }
 
@@ -1777,7 +1032,6 @@ function handleCheck(el) {
     const li = el.closest('li');
     if (li) li.classList.toggle('done', el.checked);
     
-    // Update day number styling
     if (el.dataset.key.startsWith('day-')) {
         const dayNum = el.closest('.day-accordion').querySelector('.day-number');
         dayNum.classList.toggle('completed', el.checked);
@@ -1787,9 +1041,9 @@ function handleCheck(el) {
 function copyCode(btn) {
     const pre = btn.closest('.code-card').querySelector('pre');
     navigator.clipboard.writeText(pre.textContent).then(() => {
-        btn.textContent = '✅ Copied!';
+        btn.textContent = '\u2705 Copied!';
         btn.classList.add('copied');
-        setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+        setTimeout(() => { btn.textContent = '\uD83D\uDCCB Copy'; btn.classList.remove('copied'); }, 2000);
     });
 }
 
@@ -1811,6 +1065,16 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // ============================================================
+// SCROLL BUTTONS
+// ============================================================
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('scrollUp').classList.toggle('visible', scrollY > 300);
+    document.getElementById('scrollDown').classList.toggle('visible', scrollY < maxScroll - 300);
+});
+
+// ============================================================
 // INITIALIZE
 // ============================================================
 renderSchedule();
@@ -1819,8 +1083,10 @@ renderCodeCards('csharp-cards', csharpProblems);
 renderInfraCards('terraform-cards', terraformCards);
 renderInfraCards('yaml-cards', yamlCards);
 renderInfraCards('kubernetes-cards', kubernetesCards);
+renderInfraCards('azuredevops-cards', azureDevOpsCards);
 renderListCards('sysdesign-cards', sysDesignCards);
 renderListCards('behavioral-cards', behavioralCards);
+renderStarScenarios();
 renderProblemTracker();
 updateProgressBar();
 
